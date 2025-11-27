@@ -1,0 +1,285 @@
+:root {
+    --sidebar-bg: #131631; /* Deep Indigo */
+    --neon-accent: #A2B8FF; /* Main neon blue/indigo accent */
+    --neon-glow-rgba: 162, 184, 255; /* RGB of accent */
+    --text-color-unselected: #C9D4FF; /* Soft blue text */
+    --active-color: #A2B8FF;
+    --active-bg: #252B4A;
+    --active-glow-rgba: 162, 184, 255;
+
+    --sidebar-width: 80px;
+    --sidebar-width-expanded: 224px;
+    --transition-duration: 350ms;
+    --smooth-ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+    --bg-color-base: rgba(0, 0, 0, 0.6);
+    --bg-gradient-1: #0A0A0A;
+    --bg-gradient-2: #141E30;
+    --bg-gradient-3: #243B55;
+
+    --highlight-color: rgba(100, 255, 218, 0.15); /* Light teal-cyan overlay */
+}
+
+@keyframes moving-gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* --------------------------------------------------- */
+/* 🚀 SIDEBAR CORE STYLES & TRANSITIONS */
+/* --------------------------------------------------- */
+
+.sidebar-nav {
+    /* Fixed Positioning */
+    position: fixed;
+    top: 10px;
+    bottom: 10px;
+    left: 10px; /* Aligns to 10px from the edge */
+    height: auto !important;
+
+    /* Aesthetics & Background */
+    border-radius: 30px;
+    border: 2px solid #031529 !important;
+    background: rgba(19, 22, 49, 0.5) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+
+    /* Moving Background Effect */
+    background: linear-gradient(-45deg, var(--bg-gradient-1), var(--bg-gradient-2), var(--bg-gradient-3), var(--bg-gradient-2));
+    background-size: 400% 400%;
+    animation: moving-gradient 15s ease infinite;
+
+    /* Fixed parameters */
+    z-index: 10;
+    width: var(--sidebar-width);
+    overflow: hidden;
+    align-items: center;
+
+    /* Performance hint and transition */
+    will-change: width, box-shadow;
+    transition: width var(--transition-duration) var(--smooth-ease),
+                box-shadow var(--transition-duration) var(--smooth-ease),
+                margin-left var(--transition-duration) var(--smooth-ease);
+}
+
+.sidebar-nav:hover {
+    width: var(--sidebar-width-expanded);
+
+    /* Enhanced glow effect on hover */
+    box-shadow:
+        0 10px 30px rgba(84, 129, 204),
+        0 0 15px #64FFDA,
+        0 0 40px rgba(84, 129, 204),
+        0 0 80px rgba(84, 129, 204);
+}
+
+/* --------------------------------------------------- */
+/* 💻 MAIN CONTENT PUSH */
+/* --------------------------------------------------- */
+
+.main-content {
+    /* Margin needs to account for the sidebar's width PLUS the 10px 'left' offset */
+    margin-left: calc(var(--sidebar-width) + 20px);
+    will-change: margin-left;
+    transition: margin-left var(--transition-duration) var(--smooth-ease);
+    min-height: 100vh;
+    border-right: 1px solid rgba(100, 255, 218, 0.05);
+    border-bottom: 1px solid rgba(100, 255, 218, 0.05);
+    box-shadow: 0 0 10px rgba(100, 255, 218, 0.05);
+}
+
+.sidebar-nav:hover ~ .main-content {
+    /* Margin must account for the expanded width PLUS the 10px 'left' offset */
+    margin-left: calc(var(--sidebar-width-expanded) + 20px);
+}
+
+/* --------------------------------------------------- */
+/* 🔗 LINK ALIGNMENT & PROXY ICON FIX (THE FINAL STAND) */
+/* --------------------------------------------------- */
+
+/* Target ALL links (a) AND the specific Proxy button (#id) */
+.sidebar-nav nav a,
+.sidebar-nav nav #proxy-dropdown-toggle {
+    display: flex !important;
+    align-items: center !important;
+    
+    /* 💥 THIS IS THE ATOMIC BOMB: Force horizontal center and kill the gap */
+    justify-content: center !important;
+    gap: 0 !important; 
+    
+    width: 100%;
+}
+
+/* When sidebar expands (hover), override the 'center' and restore the gap */
+.sidebar-nav:hover nav a,
+.sidebar-nav:hover nav #proxy-dropdown-toggle {
+    /* Shifts content to the left */
+    justify-content: flex-start !important;
+    /* Re-apply the desired gap for expanded view */
+    gap: 0.75rem !important;
+}
+
+/* Keep icon size fixed */
+.sidebar-nav nav a i,
+.sidebar-nav nav #proxy-dropdown-toggle i {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --------------------------------------------------- */
+/* 🏷️ NAVIGATION LABEL SLIDE-OUT */
+/* --------------------------------------------------- */
+
+.nav-label {
+    font-weight: bold;
+    opacity: 0;
+    transform: translateX(-10px);
+    will-change: opacity, transform, width;
+    transition: opacity var(--transition-duration) var(--smooth-ease),
+                transform var(--transition-duration) var(--smooth-ease),
+                width var(--transition-duration) var(--smooth-ease);
+    white-space: nowrap;
+    overflow: hidden;
+    line-height: 1.5rem;
+    width: 0;            /* collapse width when hidden */
+    margin-left: 0;      /* remove margin when hidden */
+}
+
+.sidebar-nav:hover .nav-label {
+    font-weight: bold;
+    opacity: 1;
+    transform: translateX(0);
+    width: auto;         /* expand width on hover */
+    margin-left: 1rem;   /* restore margin */
+    transition-delay: 50ms;
+}
+
+/* --------------------------------------------------- */
+/* ✨ MOVING HIGHLIGHT EFFECT */
+/* --------------------------------------------------- */
+
+.sidebar-nav nav a {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.sidebar-nav nav a::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, var(--highlight-color) 0%, transparent 70%);
+    opacity: 0;
+    transform: translate(var(--mouse-x, -50%), var(--mouse-y, -50%));
+    pointer-events: none;
+    z-index: -1;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar-nav nav a:hover::before {
+    opacity: 1;
+}
+
+/* --------------------------------------------------- */
+/* 🎨 AESTHETIC REFINEMENTS (Logo) */
+/* --------------------------------------------------- */
+
+.sidebar-logo-text {
+    color: theme('colors.baby-blue');
+    text-shadow: 0 0 3px rgba(100, 255, 218, 0.8);
+    transition: text-shadow var(--transition-duration) var(--smooth-ease);
+}
+
+.sidebar-nav:hover .sidebar-logo-text {
+    text-shadow:
+        0 0 10px theme('colors.baby-blue'),
+        0 0 20px rgba(100, 255, 218, 0.8),
+        0 0 30px rgba(100, 255, 218, 0.6),
+        0 0 45px rgba(100, 255, 218, 0.3);
+}
+
+.sidebar-nav {
+
+    position: fixed; 
+
+    top: 10px;
+
+    bottom: 10px;
+
+    height: auto !important;
+
+    margin-top: 10px;
+
+    margin-left: 10px;
+
+}
+
+
+.sidebar-nav {
+
+    position: fixed; 
+
+    top: 10px;
+
+    bottom: 10px;
+
+    left: 10px;
+
+    width: var(--sidebar-width);
+
+    height: auto !important;
+
+    margin-top: 10px;
+
+    margin-left: 10px;
+
+    border-radius: 30px;
+
+    border: 2px solid #031529 !important; /* A teeny tiny border so the damn thing is more seeable. wait is seeable a word? */
+
+    background: rgba(19, 22, 49, 0.5) !important;
+
+    backdrop-filter: blur(1px);      
+
+    -webkit-backdrop-filter: blur(10px); /* Safari support */
+
+}
+
+#proxy-dropdown-list {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    z-index: 60;
+}
+
+#proxy-container:hover #proxy-dropdown-list {
+    max-height: 500px; /* large enough to show all items */
+}
+
+#proxy-dropdown-list {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    z-index: 60;
+}
+
+#proxy-container:hover #proxy-dropdown-list {
+    max-height: 500px; /* large enough to show all items */
+}

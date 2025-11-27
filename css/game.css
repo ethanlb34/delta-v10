@@ -1,0 +1,91 @@
+:root {
+    --transition-duration: 350ms;
+    --smooth-ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --neon-blue: #5481cc;
+    --neon-blue-glow: rgba(84, 129, 204, 0.8);
+    --neon-blue-soft: rgba(84, 129, 204, 0.3);
+}
+
+body {
+    background-color: #031120; 
+    color: white;
+    font-family: theme('fontFamily.electrolize');
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Ambient background glow effect */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 150px, rgba(45, 72, 120, 0.35) 0%, rgba(3, 17, 32, 0) 60%);
+    pointer-events: none; 
+    z-index: -1;
+}
+
+/* --------------------------------------------------- */
+/* 🚀 MAIN CONTENT (Full Width) */
+/* --------------------------------------------------- */
+.main-content {
+    min-height: 100vh;
+    border-right: 1px solid rgba(84, 129, 204, 0.1);
+    border-bottom: 1px solid rgba(84, 129, 204, 0.1);
+    box-shadow: 0 0 10px rgba(84, 129, 204, 0.1);
+}
+
+/* --------------------------------------------------- */
+/* 🎨 AESTHETIC REFINEMENTS */
+/* --------------------------------------------------- */
+
+.neon-text {
+    color: var(--neon-blue);
+    text-shadow: 
+        0 0 8px var(--neon-blue-glow),
+        0 0 15px rgba(84, 129, 204, 0.6);
+}
+
+.neon-element {
+    border: 1px solid var(--neon-blue);
+    box-shadow: 0 0 8px var(--neon-blue-soft);
+    transition: all 0.3s var(--smooth-ease);
+}
+
+.neon-element:hover {
+    background-color: rgba(84, 129, 204, 0.1);
+    box-shadow:
+        0 0 8px var(--neon-blue),
+        0 0 15px var(--neon-blue),
+        0 0 30px var(--neon-blue-glow);
+    transform: translateY(-2px); 
+}
+
+.feature-card {
+    transition: all 0.4s var(--smooth-ease);
+    border: 1px solid rgba(84, 129, 204, 0.3);
+}
+
+.feature-card:hover {
+    transform: translateY(-5px) scale(1.01);
+    box-shadow: 
+        0 5px 25px rgba(84, 129, 204, 0.25),
+        0 0 15px var(--neon-blue-soft);
+}
+
+.neon-primary-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px var(--neon-blue);
+}
+
+#email {
+    color: #9fa9c2;
+}
+
+#email:hover {
+    color: var(--neon-blue);
+    transition: all 0.8s;
+}

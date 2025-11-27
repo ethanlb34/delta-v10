@@ -1,0 +1,607 @@
+/* --------------------------------------------------- */
+/* 🌎 1. GLOBAL ROOT VARIABLES & THEME OVERRIDES */
+/* --------------------------------------------------- */
+
+:root {
+    /* CORE THEME COLORS (From Index.css - Primary Source) */
+    --color-accent: #5481cc;
+    --color-accent-shadow: rgba(84, 129, 204, 0.6);
+    --color-accent-soft: rgba(84, 129, 204, 0.3);
+    --color-background: #031120;
+    --color-surface: #0a1a33;
+    
+    /* UTILITY & TRANSITIONS (Shared) */
+    --transition: cubic-bezier(0.4, 0, 0.2, 1);
+    --smooth-ease: cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* SIDEBAR/SETTINGS SPECIFIC */
+    --sidebar-bg: #131631; 
+    --text-color-unselected: #C9D4FF; 
+    --active-color: #A2B8FF;
+    --active-bg: #252B4A;
+    --active-glow-rgba: 162, 184, 255;
+    --sidebar-width: 80px;
+    --sidebar-width-expanded: 224px;
+    --transition-duration: 350ms;
+    --bg-color-base: rgba(0, 0, 0, 0.6);
+    --bg-gradient-1: #0A0A0A;
+    --bg-gradient-2: #141E30;
+    --bg-gradient-3: #243B55;
+    --highlight-color: rgba(100, 255, 218, 0.15);
+
+    /* LOGIN SPECIFIC (Prefixed to avoid conflicts) */
+    --login-bg-dark: #445675;
+    --login-bg-card: rgba(0, 10, 25, 0.85);
+
+    /* CHAT SPECIFIC (Prefixed to avoid conflicts) */
+    --chat-bg: #071025;
+    --chat-card: #0f1724;
+    --chat-muted: #9aa7c7;
+    --chat-accent: #6ea8fe;
+    --chat-msg-bg: #071424;
+    --chat-danger: #ff6b6b;
+}
+
+/* Green Theme Override (From Index.css) */
+.theme-green {
+    --color-accent: #9CFF64;
+    --color-accent-shadow: rgba(156, 255, 100, 0.6);
+    --color-accent-soft: rgba(156, 255, 100, 0.3);
+    --color-background: #081003; 
+    --color-surface: #101f0d;
+}
+
+/* Red Theme Override (From Index.css) */
+.theme-red {
+    --color-accent: #FF6464;
+    --color-accent-shadow: rgba(255, 100, 100, 0.6);
+    --color-accent-soft: rgba(255, 100, 100, 0.3);
+    --color-background: #110303; 
+    --color-surface: #250909;
+}
+
+/* --------------------------------------------------- */
+/* 🎨 2. GLOBAL BASE STYLES & ANIMATIONS */
+/* --------------------------------------------------- */
+
+body {
+    background-color: var(--color-background); 
+    color: white; 
+    font-family: theme('fontFamily.electrolize');
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden; 
+    overflow-y: scroll;
+}
+
+/* Ambient background glow (Index.css) */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 150px, var(--color-accent-soft) 0%, transparent 60%);
+    pointer-events: none; 
+    z-index: -1;
+}
+
+/* Sidebar and Settings Animations */
+@keyframes moving-gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Index.css Staggered Load Animation */
+@keyframes slide-down-fade {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px); 
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0); 
+    }
+}
+
+.animate-in {
+    animation: slide-down-fade 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+    opacity: 0;
+}
+
+/* Login.css Fade In Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --------------------------------------------------- */
+/* 🎮 3. GLOBAL COMPONENTS (Index/Game Styles) */
+/* --------------------------------------------------- */
+
+/* Input (.neon-input) - Unified Styles */
+.neon-input {
+    box-shadow: inset 0 0 8px var(--color-accent-soft); 
+}
+
+.neon-input:focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 12px var(--color-accent-shadow), inset 0 0 5px var(--color-accent-soft);
+}
+
+/* Primary Button (.neon-primary-button) - Unified Styles */
+.neon-primary-button {
+    border: 2px solid var(--color-accent); 
+    color: white; 
+    background-color: transparent;
+    box-shadow: 0 0 8px var(--color-accent-shadow);
+}
+
+.neon-primary-button:hover {
+    background-color: var(--color-accent-soft);
+    color: white;
+    box-shadow: 0 0 15px var(--color-accent-shadow), 0 0 5px var(--color-accent-soft);
+    transform: translateY(-2px);
+}
+
+/* Neon Element (.neon-element) - Unified Styles */
+.neon-element {
+    border: 1px solid var(--color-accent);
+    box-shadow: 0 0 8px var(--color-accent-soft);
+}
+
+.neon-element:hover {
+    background-color: var(--color-accent-soft);
+    box-shadow:
+        0 0 8px var(--color-accent),
+        0 0 15px var(--color-accent),
+        0 0 30px var(--color-accent-shadow);
+    transform: translateY(-2px); 
+}
+
+.feature-card {
+    border: 1px solid var(--color-accent-soft);
+}
+
+.feature-card:hover {
+    box-shadow: 
+        0 5px 25px var(--color-accent-shadow),
+        0 0 15px var(--color-accent-soft);
+}
+
+/* Neon Text (.neon-text) - Unified Styles */
+.neon-text {
+    color: var(--color-accent);
+    text-shadow: 
+        0 0 5px var(--color-accent), 
+        0 0 10px var(--color-accent-shadow);
+}
+
+/* --------------------------------------------------- */
+/* 🔑 4. LOGIN PAGE STYLES (From Login.css) */
+/* --------------------------------------------------- */
+
+/* To activate these styles, you MUST add the class 'is-login-page' to your <body> element. */
+.is-login-page { 
+    color: var(--color-accent); 
+    background: radial-gradient(circle at top, #06203a, var(--login-bg-dark) 60%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; 
+    min-height: 100vh; 
+    overflow-x: hidden;
+}
+
+/* Subtle background motion glow (Login.css) */
+.is-login-page::before {
+    content: ''; 
+    background: radial-gradient(circle at 70% 20%, rgba(100,255,218,0.15), transparent 60%),
+                radial-gradient(circle at 30% 80%, rgba(0,180,255,0.15), transparent 60%);
+    filter: blur(80px);
+    z-index: 0;
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+}
+
+/* The main login container (Login.css) */
+#login-container {
+    background: var(--login-bg-card);
+    border: 1px solid var(--color-accent-soft); 
+    box-shadow: 0 0 30px rgba(100,255,218,0.1), 0 0 100px rgba(0,255,255,0.05);
+    backdrop-filter: blur(12px);
+    border-radius: 16px;
+    padding: 40px 50px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    z-index: 1;
+    animation: fadeIn 1.2s ease;
+}
+
+h2 {
+    font-family: 'Electrolize', cursive;
+    font-size: 26px;
+    text-shadow: 0 0 10px rgba(100, 255, 218, 0.6), 0 0 20px var(--color-accent); 
+    margin-bottom: 25px;
+}
+
+/* Login-specific .neon-input styles (Login.css) */
+#login-container .neon-input {
+    padding: 14px;
+    border: 2px solid rgba(100, 255, 218, 0.1); 
+    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: var(--color-accent);
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    transition: all 0.25s var(--transition);
+    box-shadow: inset 0 0 8px rgba(100,255,218,0.15);
+}
+
+#login-container .neon-input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    background-color: rgba(0, 0, 0, 0.9);
+    box-shadow: 0 0 12px rgba(100, 255, 218, 0.6), inset 0 0 5px rgba(100, 255, 218, 0.1);
+    transform: scale(1.02);
+}
+
+/* Login-specific .neon-primary-button styles (Login.css) */
+#login-container .neon-primary-button {
+    padding: 14px;
+    margin-top: 10px;
+    border-radius: 10px;
+    border: 2px solid var(--color-accent);
+    background-color: rgba(10, 30, 40, 0.7);
+    color: var(--color-accent);
+    font-family: 'Inter', sans-serif;
+    font-weight: bolder;
+    font-size: 17px;
+    cursor: pointer;
+    transition: all 0.3s var(--transition);
+    box-shadow: 0 0 8px rgba(100, 255, 218, 0.6);
+}
+
+#login-container .neon-primary-button:hover {
+    background-color: rgba(100,255,218,0.1);
+    box-shadow: 0 0 12px var(--color-accent), 0 0 30px rgba(100,255,218,0.4);
+    transform: translateY(-2px) scale(1.04);
+}
+
+/* Error text (Login.css) */
+#login-error {
+    display: none;
+    color: #ff5c5c;
+    font-weight: bold;
+    text-shadow: 0 0 8px rgba(255, 80, 80, 0.6);
+    margin-top: 10px;
+}
+
+/* Helper text (Login.css) */
+#login-container p {
+    font-size: 13px;
+    opacity: 0.85;
+    margin-top: 20px;
+}
+
+/* --------------------------------------------------- */
+/* 💻 5. SIDEBAR & SETTINGS STYLES (From sidebar.css & settings.css) */
+/* --------------------------------------------------- */
+
+.sidebar-nav {
+    /* FIX: Sidebar floating position is correctly set */
+    position: fixed;
+    top: 10px;
+    bottom: 10px;
+    left: 10px;
+    height: auto !important; 
+
+    /* FIX: Re-enabling transparency by removing the opaque gradient override */
+    border-radius: 30px;
+    border: 2px solid #031529 !important;
+    background: rgba(19, 22, 49, 0.5); /* Semi-transparent background */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    
+    /* REMOVED: Opaque moving gradient that was covering transparency */
+    /* background: linear-gradient(-45deg, var(--bg-gradient-1), var(--bg-gradient-2), var(--bg-gradient-3), var(--bg-gradient-2));
+    background-size: 400% 400%;
+    animation: moving-gradient 15s ease infinite; */
+
+    /* Fixed parameters */
+    z-index: 10;
+    width: var(--sidebar-width);
+    overflow: hidden;
+    align-items: center;
+
+    /* Performance hint and transition */
+    will-change: width, box-shadow;
+    transition: width var(--transition-duration) var(--smooth-ease),
+                box-shadow var(--transition-duration) var(--smooth-ease),
+                margin-left var(--transition-duration) var(--smooth-ease);
+}
+
+.sidebar-nav:hover {
+    width: var(--sidebar-width-expanded);
+
+    /* Enhanced glow effect on hover */
+    box-shadow:
+        0 10px 30px rgba(84, 129, 204),
+        0 0 15px #64FFDA,
+        0 0 40px rgba(84, 129, 204),
+        0 0 80px rgba(84, 129, 204);
+}
+
+/* MAIN CONTENT PUSH */
+.main-content {
+    /* FIX: Added height 100% to ensure internal elements (like chat) use full height */
+    margin-left: calc(var(--sidebar-width) + 20px); 
+    will-change: margin-left;
+    transition: margin-left var(--transition-duration) var(--smooth-ease);
+    min-height: 100vh;
+    height: 100%; /* IMPORTANT: Makes chat area fill available vertical space */
+    border-right: 1px solid rgba(100, 255, 218, 0.05);
+    border-bottom: 1px solid rgba(100, 255, 218, 0.05);
+    box-shadow: 0 0 10px rgba(100, 255, 218, 0.05);
+}
+
+.sidebar-nav:hover ~ .main-content {
+    margin-left: calc(var(--sidebar-width-expanded) + 20px);
+}
+
+/* LINK ALIGNMENT & PROXY ICON FIX (Final version) */
+.sidebar-nav nav a,
+.sidebar-nav nav #proxy-dropdown-toggle {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important; 
+    gap: 0 !important; 
+    width: 100%;
+}
+
+.sidebar-nav:hover nav a,
+.sidebar-nav:hover nav #proxy-dropdown-toggle {
+    justify-content: flex-start !important; 
+    gap: 0.75rem !important; 
+}
+
+/* Keep icon size fixed */
+.sidebar-nav nav a i,
+.sidebar-nav nav #proxy-dropdown-toggle i {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* NAVIGATION LABEL SLIDE-OUT */
+.nav-label {
+    font-weight: bold;
+    opacity: 0;
+    transform: translateX(-10px);
+    will-change: opacity, transform, width;
+    transition: opacity var(--transition-duration) var(--smooth-ease),
+                transform var(--transition-duration) var(--smooth-ease),
+                width var(--transition-duration) var(--smooth-ease);
+    white-space: nowrap;
+    overflow: hidden;
+    line-height: 1.5rem;
+    width: 0;            
+    margin-left: 0;
+}
+
+.sidebar-nav:hover .nav-label {
+    font-weight: bold;
+    opacity: 1;
+    transform: translateX(0);
+    width: auto;
+    margin-left: 1rem;   
+    transition-delay: 50ms;
+}
+
+/* PROXY DROPDOWN LIST */
+#proxy-dropdown-list {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    z-index: 60;
+}
+
+#proxy-container:hover #proxy-dropdown-list {
+    max-height: 500px;
+}
+
+/* MOVING HIGHLIGHT EFFECT */
+.sidebar-nav nav a {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.sidebar-nav nav a::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, var(--highlight-color) 0%, transparent 70%);
+    opacity: 0;
+    transform: translate(var(--mouse-x, -50%), var(--mouse-y, -50%));
+    pointer-events: none;
+    z-index: -1;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar-nav nav a:hover::before {
+    opacity: 1;
+}
+
+/* LOGO REFINEMENTS */
+.sidebar-logo-text {
+    color: theme('colors.baby-blue');
+    text-shadow: 0 0 3px rgba(100, 255, 218, 0.8);
+    transition: text-shadow var(--transition-duration) var(--smooth-ease);
+}
+
+.sidebar-nav:hover .sidebar-logo-text {
+    text-shadow:
+        0 0 10px theme('colors.baby-blue'),
+        0 0 20px rgba(100, 255, 218, 0.8),
+        0 0 30px rgba(100, 255, 218, 0.6),
+        0 0 45px rgba(100, 255, 218, 0.3);
+}
+
+/* --------------------------------------------------- */
+/* 💬 6. CHAT STYLES (From chat.css) */
+/* --------------------------------------------------- */
+
+*{
+    box-sizing:border-box;
+    font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;
+}
+
+/* Chat HTML/Body Overrides */
+html,body{
+    height:100%; 
+    margin:0;
+    background:linear-gradient(180deg,#041021 0%,var(--chat-bg) 100%);
+    color:#e6eef9;
+} 
+
+/* Main chat wrapper */
+.wrap{
+    margin: 0; 
+    width: 100%; 
+    height: 100%; /* Ensures it fills the main-content area */
+    padding:18px;
+    display:grid;
+    grid-template-rows:auto 1fr auto;
+    gap:12px;
+}
+
+header{display:flex;align-items:center;gap:12px}
+header h1{margin:0;font-size:1.15rem;letter-spacing:0.2px}
+.controls{margin-left:auto;display:flex;gap:8px;align-items:center}
+input[type=text]{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 10px;border-radius:8px;color:var(--chat-accent);min-width:160px}
+button{background:var(--chat-accent);border:none;padding:8px 10px;border-radius:8px;color:#04243b;font-weight:600;cursor:pointer}
+button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--chat-muted)}
+button.danger{background:var(--chat-danger);color:#04243b;}
+
+/* Chat card */
+.chat-card{
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:12px;
+    padding:12px;
+    height: 100%;
+    display:flex;
+    flex-direction:column;
+}
+
+/* Messages container */
+.messages{overflow:auto;padding:6px 4px 18px 4px;flex:1;display:flex;flex-direction:column;gap:8px}
+.msg{display:flex;gap:10px;align-items:flex-start;max-width:90%}
+.avatar{width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0}
+.bubble{padding:10px 14px;border-radius:18px 18px 18px 6px;line-height:1.45;color:#e6eef9;background-color:var(--chat-msg-bg);max-width:100%;word-wrap:break-word}
+.msg.you .bubble{border-radius:18px 18px 6px 18px}
+.msg.model .bubble{border-radius:18px 18px 18px 6px;color:#e6eef9;background-color:var(--chat-msg-bg)}
+.msg p:last-child{margin-bottom:0}
+.msg h3{font-size:1em;margin-top:0;font-weight:600}
+.msg a{color:var(--chat-accent)}
+.msg code:not(.hljs){background:rgba(255,255,255,0.08);padding:2px 4px;border-radius:4px;font-family:monospace}
+.msg pre{margin-top:8px;background:var(--chat-bg);border-radius:6px;overflow-x:auto}
+.msg pre code{display:block;padding:10px;font-size:0.85rem}
+.msg .actions{margin-top:6px;display:flex;gap:10px;font-size:0.9rem;opacity:0.8}
+.msg .actions button{background:none;border:none;color:var(--chat-muted);padding:0;cursor:pointer;font-weight:400}
+.msg .actions button:hover{color:var(--chat-accent)}
+.typing-indicator{display:inline-block;width:8px;height:8px;margin:0 2px;border-radius:50%;background-color:var(--chat-accent);opacity:0.4;animation:blink 1.4s infinite ease-in-out both}
+.typing-indicator:nth-child(1){animation-delay:-0.32s}
+.typing-indicator:nth-child(2){animation-delay:-0.16s}
+@keyframes blink{
+    0%, 80%, 100%{opacity:0.4}
+    40%{opacity:1}
+}
+.new-message-prompt{
+    position:absolute;bottom:calc(18px + 12px + 50px);
+    right:18px;padding:10px 15px;
+    background:var(--chat-accent);
+    color:#04243b;
+    border-radius:20px;
+    font-weight:600;
+    box-shadow:0 4px 12px rgba(0,0,0,0.2);
+    cursor:pointer;
+    transition:opacity 0.2s;
+}
+.new-message-prompt:hover{opacity:0.9}
+.room-list-card{ 
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:12px; padding:12px; max-height: 100%; overflow-y:auto; 
+} 
+.room-list-card h3{ 
+    font-size: 1rem; margin: 0 0 8px 0; color: var(--chat-accent); display: flex;
+    justify-content: space-between; align-items: center; 
+} 
+.room-list-card button{ 
+    display:block; width:100%; text-align:left; background: none; border: none; padding: 8px 10px; margin-bottom: 4px;
+    border-radius: 6px; color: #e6eef9; cursor: pointer; font-weight: 400; transition: background 0.1s; 
+} 
+.room-list-card button:hover, .room-list-card button.active{ 
+    background: rgba(255,255,255,0.08);
+} 
+.room-list-card button small{ color: var(--chat-muted); font-size: 0.75rem; margin-left: 8px; } 
+.room-list-card button small[style*="var(--chat-accent)"] { font-weight: 600; } 
+.room-list-card button .rename-icon{ float: right; font-weight: bold; opacity: 0.5; transition: opacity 0.2s; cursor: pointer; } 
+.room-list-card button:hover .rename-icon{ opacity: 1; } 
+
+/* Modal Styles - FIX: Updated input style for chat theme */
+.modal-overlay { 
+    position: fixed; top: 0;
+    left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); display: flex; align-items: center; justify-content: center; z-index: 1000;
+}
+.modal { 
+    background: var(--chat-card); color: #e6eef9; padding: 25px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); width: 90%; max-width: 400px; 
+}
+.modal h3{ 
+    margin-top: 0; color: var(--chat-accent); 
+}
+/* FIX: Added specific styling for modal text input */
+.modal input[type="text"] { 
+    width: 100%; 
+    margin: 10px 0; 
+    background: rgba(0, 0, 0, 0.4); 
+    border: 1px solid var(--chat-muted); 
+    padding: 10px;
+    border-radius: 6px;
+    color: #e6eef9; 
+    outline: none;
+}
+.modal-actions { 
+    display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; 
+}
+.modal-actions button.ghost { 
+    background: var(--chat-card); color: #e6eef9; border-color: var(--chat-muted); 
+}
+
+@media (max-width:560px){ 
+    .wrap{padding:10px} 
+    input[type=text]{min-width:110px} 
+    main{grid-template-columns: 1fr !important;} /* Stack on small screens */ 
+}

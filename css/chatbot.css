@@ -1,0 +1,342 @@
+:root {
+    /* Layout Variables */
+    --transition-duration: 350ms; 
+    --smooth-ease: cubic-bezier(0.4, 0, 0.2, 1); 
+
+    /* --- Dark Blue Theme Variables --- */
+    --page-bg: #0A192F; /* Deep, richer dark blue background */
+    --panel: #112240; /* Bot message background */
+    --panel-2: #000000; /* Header/Input bar/Code Block background (Pure Black) */
+
+    /* Accent Colors (Baby Blue Neon) */
+    --baby-blue: #5481cc; /* Primary neon accent color */
+    --baby-blue-shadow: #445675; 
+
+    --accent: var(--baby-blue);
+    --send-icon-color: #031120; /* Dark text for contrast on accent background */
+
+    /* Text Colors */
+    --text: #FFFFFF; /* Pure white for main text */
+    --muted: #94A3B8; /* Slate 400 for muted text/placeholders */
+    --bot-text-color: var(--text); /* Bot text is white */
+    --user-text-color: var(--send-icon-color); /* User text is dark blue on light bubble */
+
+    --radius: 12px;
+}
+
+/* --- CORE LAYOUT & BACKGROUND --- */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: var(--page-bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Subtle radial gradient for depth */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 150px, rgba(18, 48, 72, 0.4) 0%, rgba(3, 17, 32, 0) 60%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* --- MAIN APPLICATION WRAPPER (.nexora) --- */
+.nexora {
+    box-sizing: border-box;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background: var(--page-bg);
+    font-weight: 500;
+}
+.nexora *, .nexora *::before, .nexora *::after { box-sizing: inherit; }
+
+.nexora .app { display: flex; flex-direction: column; height: 100%; }
+
+.nexora .chat {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Message Scroll Container */
+.nexora .scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    /* Custom scrollbar styling */
+    scrollbar-color: var(--panel-2) var(--page-bg);
+    scrollbar-width: thin;
+}
+.nexora .scroll::-webkit-scrollbar { width: 8px; }
+.nexora .scroll::-webkit-scrollbar-track { background: var(--page-bg); }
+.nexora .scroll::-webkit-scrollbar-thumb { 
+    background-color: var(--panel-2); 
+    border-radius: 4px; 
+    border: 2px solid var(--page-bg); 
+}
+
+/* --- INTRO SCREEN (What can I do for you?) --- */
+.nexora .intro {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.nexora .intro h1 {
+    font-weight: 800;
+    font-size: 28px;
+    background: linear-gradient(90deg, var(--baby-blue), var(--baby-blue));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 8px var(--baby-blue-shadow);
+}
+/* Blinking cursor effect */
+.nexora .intro h1::after {
+    content: '';
+    display: inline-block;
+    width: 2px;
+    height: 1.2em;
+    margin-left: 6px;
+    background: var(--accent);
+    vertical-align: middle;
+    border-radius: 1px;
+    transform: translateY(-0.06em);
+    animation: cursor-blink 1s steps(2, start) infinite;
+}
+@keyframes cursor-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+@keyframes fade { from { opacity: 0; transform: translateY(4px) } to { opacity: 1; transform: translateY(0) } }
+
+/* --- MESSAGE BUBBLES (.msg) --- */
+.nexora .msg { 
+    max-width: 75%; 
+    padding: 10px 14px;
+    border-radius: 18px;
+    animation: fade .3s var(--smooth-ease);
+    line-height: 1.6;
+}
+
+/* User Message (Right Aligned, Light Bubble, Dark Text) */
+.nexora .msg.user {
+    align-self: flex-end; /* ALIGN TO THE RIGHT (User Default) */
+    background: var(--accent); /* Light Baby Blue */
+    color: var(--user-text-color); /* Dark text */
+    border-bottom-right-radius: 6px;
+    box-shadow: 0 6px 20px var(--baby-blue-shadow);
+    font-weight: 600;
+}
+
+/* Bot Message (Left Aligned, Dark Bubble, White Text) */
+.nexora .msg.model {
+    align-self: flex-start; /* ALIGN TO THE LEFT (FIXED: Bot is on the left now) */
+    background: var(--panel); /* Dark Blue */
+    color: var(--bot-text-color); /* White text */
+    border-bottom-left-radius: 6px; /* Update radius for left alignment */
+    border-bottom-right-radius: 18px; /* Restore full radius on the right side */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* --- MARKDOWN ELEMENTS INSIDE MESSAGES --- */
+
+/* Text formatting */
+.nexora .msg p { margin: 0 0 10px 0; }
+.nexora .msg p:last-child { margin-bottom: 0; }
+
+/* Headers (small and visible) */
+.nexora .msg h1, .nexora .msg h2, .nexora .msg h3 {
+    font-weight: 700;
+    margin: 12px 0 6px 0;
+    line-height: 1.2;
+    color: var(--baby-blue);
+}
+.nexora .msg h3 { font-size: 1.1em; }
+.nexora .msg h4 { font-size: 1em; }
+
+/* Lists */
+.nexora .msg ul, .nexora .msg ol {
+    margin: 8px 0 10px 20px;
+    padding: 0;
+}
+.nexora .msg li {
+    margin-bottom: 4px;
+}
+
+/* Inline Code */
+.nexora .msg code:not(.hljs) {
+    background: rgba(100, 255, 218, 0.1);
+    color: var(--baby-blue);
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.9em;
+}
+
+/* --- CODE BLOCKS (Prettified for HLJS) --- */
+.nexora .msg pre {
+    /* FIX: Removed the negative bottom margin (-10px) to prevent overlap. */
+    margin: 10px -14px 0 -14px; /* Only negative left/right margin */
+    border-radius: 0 0 12px 12px;
+    overflow: hidden;
+    background: var(--panel-2); /* Pure Black background */
+    border-top: 1px solid rgba(100, 255, 218, 0.1);
+}
+
+.nexora .msg pre code {
+    display: block;
+    padding: 12px 14px;
+    overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #f8f8f2; /* Default HLJS text color */
+}
+
+/* Code block language header (top of the bubble) */
+.nexora .code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 14px;
+    background: color-mix(in srgb, var(--panel-2) 80%, #000); /* Darker shade of black */
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 12px 12px 0 0;
+    /* This margin pulls the header up to the top edge of the bubble padding */
+    margin: -10px -14px 0 -14px; 
+}
+.nexora .code-header .copy-btn {
+    color: var(--baby-blue);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+.nexora .code-header .copy-btn:hover {
+    background: rgba(100, 255, 218, 0.1);
+}
+
+/* --- FOOTER / INPUT BAR --- */
+.nexora .footer {
+    flex-shrink: 0;
+    padding: 12px;
+    border-top: 1px solid color-mix(in srgb, var(--panel) 8%, #000 0%);
+    background: color-mix(in srgb, var(--panel-2) 6%, transparent);
+}
+
+.nexora .input-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    background: var(--panel-2);
+    border: 1px solid color-mix(in srgb, var(--panel) 8%, #000 0%);
+    border-radius: 999px;
+    padding: 6px 8px;
+}
+.nexora .input-row:focus-within {
+    border-color: color-mix(in srgb, var(--accent) 65%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--baby-blue) 20%, transparent);
+}
+
+.nexora .input {
+    flex: 1;
+    background: transparent;
+    color: var(--text);
+    border: 0;
+    outline: 0;
+    height: 44px;
+    padding: 0 10px;
+    font-size: 16px;
+}
+.nexora .input::placeholder { color: color-mix(in srgb, var(--text) 36%, transparent); opacity: .9; }
+
+.nexora .send {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    border-radius: 50%;
+    border: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent);
+    color: var(--send-icon-color);
+    font-size: 18px;
+    font-weight: 900;
+    transition: transform .06s ease, filter .15s ease;
+}
+.nexora .send:hover:not(:disabled) { filter: brightness(1.08); }
+.nexora .send:active:not(:disabled) { transform: scale(0.97); }
+.nexora .send:disabled {
+    background: color-mix(in srgb, var(--accent) 40%, transparent);
+    cursor: not-allowed;
+}
+
+/* --- TYPING INDICATOR --- */
+.nexora .typing-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    max-width: 72%;
+    line-height: 1;
+    align-self: flex-start; /* Left aligned, like a standard bot message */
+}
+.nexora .loader {
+    width: 12px;
+    height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    margin: 0 2px;
+    animation: bounce 0.6s infinite alternate;
+    opacity: 0.8;
+}
+.nexora .loader:nth-child(2) { animation-delay: 0.2s; }
+.nexora .loader:nth-child(3) { animation-delay: 0.4s; }
+@keyframes bounce {
+    from { transform: translateY(0); }
+    to { transform: translateY(-4px); }
+}
+
+/* --- UTILITIES & ACCESSIBILITY --- */
+.nexora a { color: var(--baby-blue); text-decoration: none; }
+.nexora a:hover { text-decoration: underline; }
+
+.nexora a:focus, .nexora button:focus, .nexora .input:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--baby-blue) 16%, transparent);
+    border-radius: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .nexora * , .nexora *::before, .nexora *::after {
+        animation-duration: 1ms !important;
+        transition-duration: 1ms !important;
+    }
+}

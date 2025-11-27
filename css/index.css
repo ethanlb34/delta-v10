@@ -1,0 +1,143 @@
+:root {
+    /* 💥 FIX: ALL theme colors must be defined here */
+    --color-accent: #5481cc;
+    --color-accent-shadow: rgba(84, 129, 204, 0.6);
+    --color-accent-soft: rgba(84, 129, 204, 0.3);
+    --color-background: #031120;
+    --color-surface: #0a1a33;
+    
+    /* Utility/Layout */
+    --transition: cubic-bezier(0.4, 0, 0.2, 1);
+    --smooth-ease: cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* 💥 REMOVE: All old variables like --neon-blue, --neon-blue-glow, etc., must be deleted from here. */
+}
+
+/* Green Theme Override (CORRECT) */
+.theme-green {
+    --color-accent: #9CFF64;
+    --color-accent-shadow: rgba(156, 255, 100, 0.6);
+    --color-accent-soft: rgba(156, 255, 100, 0.3);
+    --color-background: #081003; 
+    --color-surface: #101f0d;
+}
+
+/* Red Theme Override (CORRECT) */
+.theme-red {
+    --color-accent: #FF6464;
+    --color-accent-shadow: rgba(255, 100, 100, 0.6);
+    --color-accent-soft: rgba(255, 100, 100, 0.3);
+    --color-background: #110303; 
+    --color-surface: #250909;
+}
+
+body {
+    /* FIX: Ensure background and color use theme variables */
+    background-color: var(--color-background); 
+    color: white; 
+    font-family: theme('fontFamily.electrolize');
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Ambient background glow (FIXED: ensures it uses theme colors) */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* FIX: Use theme variables for dynamic glow */
+    background: radial-gradient(circle at 50% 150px, var(--color-accent-soft) 0%, transparent 60%);
+    pointer-events: none; 
+    z-index: -1;
+}
+
+/* --------------------------------------------------- */
+/* index.css: BUTTON & GAME FIXES */
+/* --------------------------------------------------- */
+
+/* Input (Use consistent variable names) */
+.neon-input {
+    box-shadow: inset 0 0 8px var(--color-accent-soft);
+}
+
+.neon-input:focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 12px var(--color-accent-shadow), inset 0 0 5px var(--color-accent-soft);
+}
+
+/* FIX 1: Button Text Visibility */
+.neon-primary-button {
+    border: 2px solid var(--color-accent);
+    /* ✅ FIX: Changed color from var(--color-accent) to white for visibility */
+    color: white; 
+    background-color: transparent; /* Ensures the button looks like an outline */
+    box-shadow: 0 0 8px var(--color-accent-shadow);
+}
+
+.neon-primary-button:hover {
+    background-color: var(--color-accent-soft);
+    /* Text color remains white for high contrast */
+    color: white; 
+    box-shadow: 0 0 15px var(--color-accent-shadow), 0 0 5px var(--color-accent-soft);
+    transform: translateY(-2px);
+}
+
+/* FIX 2: Game Hover Outline Conflict (The blue/green layered outline) */
+.neon-element {
+    border: 1px solid var(--color-accent); 
+    box-shadow: 0 0 8px var(--color-accent-soft);
+}
+
+.neon-element:hover {
+    background-color: var(--color-accent-soft);
+    /* 🔥 FIX: Ensure only dynamic variables are used, removing any fixed colors */
+    box-shadow:
+        0 0 8px var(--color-accent),
+        0 0 15px var(--color-accent),
+        0 0 30px var(--color-accent-shadow);
+    transform: translateY(-2px); 
+}
+
+.feature-card {
+    border: 1px solid var(--color-accent-soft);
+}
+
+.feature-card:hover {
+    box-shadow: 
+        0 5px 25px var(--color-accent-shadow),
+        0 0 15px var(--color-accent-soft); 
+}
+
+/* FIX 3: Text Outline */
+.neon-text {
+    color: var(--color-accent);
+    text-shadow: 
+        0 0 5px var(--color-accent), 
+        0 0 10px var(--color-accent-shadow);
+}
+
+/* --------------------------------------------------- */
+/* 💥 NEW: HOMEPAGE STAGGERED LOAD ANIMATION (Top-to-Bottom) */
+/* --------------------------------------------------- */
+
+@keyframes slide-down-fade {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px); /* Start slightly above */
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0); /* End at final position */
+    }
+}
+
+.animate-in {
+    /* Sets the animation properties for all homepage elements */
+    animation: slide-down-fade 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+    /* 'both' keeps the element at 100% opacity/position after the animation finishes */
+    opacity: 0; /* Ensures the element starts invisible */
+}
