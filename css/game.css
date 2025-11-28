@@ -1,13 +1,28 @@
 :root {
     --transition-duration: 350ms;
     --smooth-ease: cubic-bezier(0.4, 0, 0.2, 1);
-    --neon-blue: #5481cc;
-    --neon-blue-glow: rgba(84, 129, 204, 0.8);
-    --neon-blue-soft: rgba(84, 129, 204, 0.3);
+    --elastic-ease: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    --bounce-ease: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes card-float {
+    0%, 100% { transform: translateY(0) rotateX(0) rotateY(0); }
+    25% { transform: translateY(-5px) rotateX(2deg) rotateY(-2deg); }
+    75% { transform: translateY(-3px) rotateX(-2deg) rotateY(2deg); }
+}
+
+@keyframes card-glow-pulse {
+    0%, 100% { box-shadow: 0 4px 15px rgba(0,0,0,0.3), 0 0 0 1px var(--color-accent-soft); }
+    50% { box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 15px var(--color-accent-soft), 0 0 0 1px var(--color-accent); }
+}
+
+@keyframes shine-effect {
+    0% { transform: translateX(-100%) rotate(45deg); }
+    100% { transform: translateX(200%) rotate(45deg); }
 }
 
 body {
-    background-color: #031120; 
+    background-color: var(--color-background); 
     color: white;
     font-family: theme('fontFamily.electrolize');
     min-height: 100vh;
@@ -15,27 +30,15 @@ body {
     overflow-x: hidden;
 }
 
-/* Ambient background glow effect */
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at 50% 150px, rgba(45, 72, 120, 0.35) 0%, rgba(3, 17, 32, 0) 60%);
-    pointer-events: none; 
-    z-index: -1;
-}
 
 /* --------------------------------------------------- */
 /* 🚀 MAIN CONTENT (Full Width) */
 /* --------------------------------------------------- */
 .main-content {
     min-height: 100vh;
-    border-right: 1px solid rgba(84, 129, 204, 0.1);
-    border-bottom: 1px solid rgba(84, 129, 204, 0.1);
-    box-shadow: 0 0 10px rgba(84, 129, 204, 0.1);
+    border-right: 1px solid var(--color-accent-soft);
+    border-bottom: 1px solid var(--color-accent-soft);
+    box-shadow: 0 0 10px var(--color-accent-soft);
 }
 
 /* --------------------------------------------------- */
@@ -43,42 +46,29 @@ body::before {
 /* --------------------------------------------------- */
 
 .neon-text {
-    color: var(--neon-blue);
+    color: var(--color-accent);
     text-shadow: 
-        0 0 8px var(--neon-blue-glow),
-        0 0 15px rgba(84, 129, 204, 0.6);
+        0 0 8px var(--color-accent-shadow),
+        0 0 15px var(--color-accent-shadow);
 }
 
-.neon-element {
-    border: 1px solid var(--neon-blue);
-    box-shadow: 0 0 8px var(--neon-blue-soft);
-    transition: all 0.3s var(--smooth-ease);
-}
-
-.neon-element:hover {
-    background-color: rgba(84, 129, 204, 0.1);
-    box-shadow:
-        0 0 8px var(--neon-blue),
-        0 0 15px var(--neon-blue),
-        0 0 30px var(--neon-blue-glow);
-    transform: translateY(-2px); 
-}
+/* Note: .neon-element styles are defined in index.css for consistency */
 
 .feature-card {
     transition: all 0.4s var(--smooth-ease);
-    border: 1px solid rgba(84, 129, 204, 0.3);
+    border: 1px solid var(--color-accent-soft);
 }
 
 .feature-card:hover {
     transform: translateY(-5px) scale(1.01);
     box-shadow: 
-        0 5px 25px rgba(84, 129, 204, 0.25),
-        0 0 15px var(--neon-blue-soft);
+        0 5px 25px var(--color-accent-shadow),
+        0 0 15px var(--color-accent-soft);
 }
 
 .neon-primary-button:hover {
     transform: scale(1.05);
-    box-shadow: 0 0 20px var(--neon-blue);
+    box-shadow: 0 0 20px var(--color-accent);
 }
 
 #email {
@@ -86,6 +76,140 @@ body::before {
 }
 
 #email:hover {
-    color: var(--neon-blue);
+    color: var(--color-accent);
     transition: all 0.8s;
+}
+
+/* Game window and toolbar glow effects using theme variables */
+.game-window-glow {
+    box-shadow: 
+        0 0 80px 10px var(--color-accent-shadow),
+        0 0 120px 20px var(--color-accent-soft),
+        inset 0 0 30px var(--color-accent-soft);
+    border-color: var(--color-accent) !important;
+}
+
+.game-toolbar-glow {
+    box-shadow: 
+        0 0 40px 5px var(--color-accent-shadow),
+        0 0 60px 10px var(--color-accent-soft);
+}
+
+/* --------------------------------------------------- */
+/* 🎮 ENHANCED GAME CARDS */
+/* --------------------------------------------------- */
+
+/* Game grid - no 3D perspective needed for stable hovers */
+
+#gameGrid > div {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    background: linear-gradient(145deg, var(--color-surface), rgba(0,0,0,0.5));
+    border: 1px solid var(--color-accent-soft);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+#gameGrid > div:hover {
+    border-color: var(--color-accent);
+    box-shadow:
+        0 8px 20px var(--color-accent-shadow),
+        0 0 20px var(--color-accent-soft);
+}
+
+#gameGrid > div img {
+    transition: filter 0.3s ease;
+    filter: brightness(0.9);
+}
+
+#gameGrid > div:hover img {
+    filter: brightness(1.1) saturate(1.2);
+}
+
+#gameGrid > div .game-title,
+#gameGrid > div p {
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+#gameGrid > div:hover .game-title,
+#gameGrid > div:hover p {
+    color: var(--color-accent);
+    text-shadow: 0 0 10px var(--color-accent-shadow);
+}
+
+/* --------------------------------------------------- */
+/* 🔍 ENHANCED SEARCH INPUT - CIRCULAR FLOATING */
+/* --------------------------------------------------- */
+
+#searchInput {
+    border: 2px solid var(--color-accent-soft) !important;
+    transition: all 0.3s var(--elastic-ease);
+    background: rgba(0, 0, 0, 0.3) !important;
+    border-radius: 50px !important;
+    padding: 12px 24px !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    position: relative;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.2),
+        0 0 15px rgba(var(--color-accent-rgb, 100, 200, 255), 0.1) !important;
+}
+
+#searchInput:focus {
+    border-color: var(--color-accent) !important;
+    background: rgba(0, 0, 0, 0.4) !important;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        0 0 20px var(--color-accent-shadow),
+        0 0 40px var(--color-accent-soft),
+        inset 0 0 10px var(--color-accent-soft) !important;
+    transform: scale(1.05) translateY(-2px);
+}
+
+#searchInput::placeholder {
+    transition: all 0.3s ease;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+#searchInput:focus::placeholder {
+    opacity: 0.3;
+    transform: translateX(10px);
+}
+
+/* --------------------------------------------------- */
+/* 📄 PAGINATION ENHANCEMENT */
+/* --------------------------------------------------- */
+
+#pagination button {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s var(--elastic-ease);
+    border: 1px solid var(--color-accent-soft);
+}
+
+#pagination button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: var(--color-accent);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.4s ease, height 0.4s ease;
+    z-index: -1;
+}
+
+#pagination button:hover::before {
+    width: 150px;
+    height: 150px;
+}
+
+#pagination button:hover {
+    color: var(--color-background);
+    border-color: var(--color-accent);
+    box-shadow: 0 0 20px var(--color-accent-shadow);
+    transform: scale(1.1);
 }
