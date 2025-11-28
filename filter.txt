@@ -1,3 +1,0 @@
-So this is supposed to be the filter checker for the chrome
-extenstion thingy, but its not one html. So you basically need
-to use cdn to link the things.
