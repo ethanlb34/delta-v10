@@ -1,16 +1,28 @@
 :root {
-    /* 💥 FIX: ALL theme colors must be defined here */
+    /* Theme Colors */
     --color-accent: #5481cc;
     --color-accent-shadow: rgba(84, 129, 204, 0.6);
     --color-accent-soft: rgba(84, 129, 204, 0.3);
     --color-background: #031120;
     --color-surface: #0a1a33;
     
-    /* Utility/Layout */
+    /* Enhanced Easing Functions */
     --transition: cubic-bezier(0.4, 0, 0.2, 1);
     --smooth-ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --bounce-ease: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --elastic-ease: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    --snap-ease: cubic-bezier(0.6, 0.01, 0.15, 1);
     
-    /* 💥 REMOVE: All old variables like --neon-blue, --neon-blue-glow, etc., must be deleted from here. */
+    /* Animation Timing */
+    --anim-fast: 200ms;
+    --anim-normal: 350ms;
+    --anim-slow: 500ms;
+    
+    /* Glow Intensities */
+    --glow-subtle: 0 0 10px;
+    --glow-medium: 0 0 20px;
+    --glow-intense: 0 0 40px;
+    --glow-extreme: 0 0 60px;
 }
 
 /* Green Theme Override (CORRECT) */
@@ -29,6 +41,71 @@
     --color-accent-soft: rgba(255, 100, 100, 0.3);
     --color-background: #110303; 
     --color-surface: #250909;
+}
+
+/* Purple Theme - Grape Blast */
+.theme-grape-blast {
+    --color-accent: #A855F7;
+    --color-accent-shadow: rgba(168, 85, 247, 0.6);
+    --color-accent-soft: rgba(168, 85, 247, 0.3);
+    --color-background: #0d0312;
+    --color-surface: #1a0829;
+}
+
+/* Orange Theme - Tangerine Flow */
+.theme-tangerine-flow {
+    --color-accent: #FB923C;
+    --color-accent-shadow: rgba(251, 146, 60, 0.6);
+    --color-accent-soft: rgba(251, 146, 60, 0.3);
+    --color-background: #120801;
+    --color-surface: #261405;
+}
+
+/* Pink Theme - Candy Cane */
+.theme-candy-cane {
+    --color-accent: #F472B6;
+    --color-accent-shadow: rgba(244, 114, 182, 0.6);
+    --color-accent-soft: rgba(244, 114, 182, 0.3);
+    --color-background: #120308;
+    --color-surface: #260915;
+}
+
+/* Yellow Theme - Sun Delight */
+.theme-sun-delight {
+    --color-accent: #FACC15;
+    --color-accent-shadow: rgba(250, 204, 21, 0.6);
+    --color-accent-soft: rgba(250, 204, 21, 0.3);
+    --color-background: #0d0a01;
+    --color-surface: #1f1803;
+}
+
+/* ============ HOLIDAY COLORS ============ */
+
+/* Christmas - Red text/buttons on Green background */
+.theme-christmas {
+    --color-accent: #FF6464;
+    --color-accent-shadow: rgba(255, 100, 100, 0.6);
+    --color-accent-soft: rgba(255, 100, 100, 0.3);
+    --color-background: #081003;
+    --color-surface: #0f1f0a;
+}
+
+/* New Year - Blue text/buttons on Red background */
+.theme-new-year {
+    --color-accent: #5481cc;
+    --color-accent-shadow: rgba(84, 129, 204, 0.6);
+    --color-accent-soft: rgba(84, 129, 204, 0.3);
+    --color-background: #110303;
+    --color-surface: #200808;
+}
+
+/* Halloween - Orange text/buttons on Purple background */
+.theme-halloween {
+    --color-accent: #FB923C;
+    --color-accent-shadow: rgba(251, 146, 60, 0.6);
+    --color-accent-soft: rgba(251, 146, 60, 0.3);
+    --color-background: #0d0312;
+    --color-surface: #1a0829;
 }
 
 body {
@@ -69,47 +146,129 @@ body::before {
     box-shadow: 0 0 12px var(--color-accent-shadow), inset 0 0 5px var(--color-accent-soft);
 }
 
-/* FIX 1: Button Text Visibility */
+/* Enhanced Primary Button */
 .neon-primary-button {
     border: 2px solid var(--color-accent);
-    /* ✅ FIX: Changed color from var(--color-accent) to white for visibility */
     color: white; 
-    background-color: transparent; /* Ensures the button looks like an outline */
-    box-shadow: 0 0 8px var(--color-accent-shadow);
+    background: linear-gradient(135deg, transparent, var(--color-accent-soft));
+    box-shadow: 
+        0 0 15px var(--color-accent-shadow),
+        inset 0 0 20px var(--color-accent-soft);
+    position: relative;
+    overflow: hidden;
+    transition: all 350ms var(--smooth-ease);
+}
+
+.neon-primary-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: var(--color-accent);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.42s ease, height 0.42s ease;
+    z-index: -1;
+}
+
+.neon-primary-button:hover::before {
+    width: 300px;
+    height: 300px;
 }
 
 .neon-primary-button:hover {
-    background-color: var(--color-accent-soft);
-    /* Text color remains white for high contrast */
-    color: white; 
-    box-shadow: 0 0 15px var(--color-accent-shadow), 0 0 5px var(--color-accent-soft);
-    transform: translateY(-2px);
+    color: var(--color-background); 
+    border-color: var(--color-accent);
+    box-shadow: 
+        0 0 30px var(--color-accent),
+        0 0 60px var(--color-accent-shadow),
+        inset 0 0 30px var(--color-accent-soft);
+    transform: translateY(-4px) scale(1.05);
 }
 
-/* FIX 2: Game Hover Outline Conflict (The blue/green layered outline) */
+.neon-primary-button:active {
+    transform: translateY(-2px) scale(1.02);
+    transition: all 0.1s ease;
+}
+
+/* Enhanced Neon Elements */
 .neon-element {
     border: 1px solid var(--color-accent); 
-    box-shadow: 0 0 8px var(--color-accent-soft);
+    box-shadow: 0 0 15px var(--color-accent-soft);
+    position: relative;
+    overflow: hidden;
+    transition: all var(--anim-normal) var(--elastic-ease);
+}
+
+.neon-element::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, var(--color-accent-soft) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity var(--anim-normal) ease;
+    pointer-events: none;
+}
+
+.neon-element:hover::after {
+    opacity: 1;
 }
 
 .neon-element:hover {
     background-color: var(--color-accent-soft);
-    /* 🔥 FIX: Ensure only dynamic variables are used, removing any fixed colors */
+    border-color: var(--color-accent);
     box-shadow:
-        0 0 8px var(--color-accent),
         0 0 15px var(--color-accent),
-        0 0 30px var(--color-accent-shadow);
-    transform: translateY(-2px); 
+        0 0 30px var(--color-accent),
+        0 0 50px var(--color-accent-shadow),
+        inset 0 0 20px var(--color-accent-soft);
+    transform: translateY(-5px) scale(1.02);
 }
 
 .feature-card {
     border: 1px solid var(--color-accent-soft);
+    position: relative;
+    overflow: hidden;
+    transition: all 350ms var(--smooth-ease);
+    background: linear-gradient(145deg, var(--color-surface), rgba(0,0,0,0.3));
+}
+
+.feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, var(--color-accent-soft), transparent);
+    transition: left 0.42s ease;
+}
+
+.feature-card:hover::before {
+    left: 100%;
 }
 
 .feature-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: var(--color-accent);
     box-shadow: 
-        0 5px 25px var(--color-accent-shadow),
-        0 0 15px var(--color-accent-soft); 
+        0 15px 40px var(--color-accent-shadow),
+        0 0 20px var(--color-accent-soft),
+        inset 0 0 30px var(--color-accent-soft);
+}
+
+.feature-card .text-3xl {
+    transition: all var(--anim-normal) var(--elastic-ease);
+}
+
+.feature-card:hover .text-3xl {
+    transform: scale(1.2);
+    filter: drop-shadow(0 0 15px var(--color-accent));
 }
 
 /* FIX 3: Text Outline */
@@ -121,23 +280,136 @@ body::before {
 }
 
 /* --------------------------------------------------- */
-/* 💥 NEW: HOMEPAGE STAGGERED LOAD ANIMATION (Top-to-Bottom) */
+/* ENHANCED ANIMATIONS & KEYFRAMES */
 /* --------------------------------------------------- */
 
 @keyframes slide-down-fade {
     0% {
         opacity: 0;
-        transform: translateY(-20px); /* Start slightly above */
+        transform: translateY(-30px) scale(0.95);
+        filter: blur(8px);
     }
     100% {
         opacity: 1;
-        transform: translateY(0); /* End at final position */
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+@keyframes slide-up-fade {
+    0% {
+        opacity: 0;
+        transform: translateY(40px) scale(0.95);
+        filter: blur(8px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+@keyframes scale-in {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes pulse-glow {
+    0%, 100% {
+        box-shadow: 0 0 20px var(--color-accent-shadow), 0 0 40px var(--color-accent-soft);
+    }
+    50% {
+        box-shadow: 0 0 30px var(--color-accent-shadow), 0 0 60px var(--color-accent-soft), 0 0 80px var(--color-accent-soft);
+    }
+}
+
+@keyframes text-glow-pulse {
+    0%, 100% {
+        text-shadow: 0 0 10px var(--color-accent), 0 0 20px var(--color-accent-shadow);
+    }
+    50% {
+        text-shadow: 0 0 20px var(--color-accent), 0 0 40px var(--color-accent-shadow), 0 0 60px var(--color-accent-shadow);
+    }
+}
+
+@keyframes border-glow {
+    0%, 100% {
+        border-color: var(--color-accent-soft);
+    }
+    50% {
+        border-color: var(--color-accent);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% center;
+    }
+    100% {
+        background-position: 200% center;
+    }
+}
+
+@keyframes rotate-glow {
+    0% {
+        filter: hue-rotate(0deg);
+    }
+    100% {
+        filter: hue-rotate(360deg);
     }
 }
 
 .animate-in {
-    /* Sets the animation properties for all homepage elements */
-    animation: slide-down-fade 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-    /* 'both' keeps the element at 100% opacity/position after the animation finishes */
-    opacity: 0; /* Ensures the element starts invisible */
+    animation: slide-up-fade 0.8s var(--elastic-ease) both;
+    opacity: 0;
+}
+
+.animate-float {
+    animation: float 4s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+    animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.animate-text-glow {
+    animation: text-glow-pulse 2s ease-in-out infinite;
+}
+
+/* --------------------------------------------------- */
+/* ENHANCED TYPOGRAPHY */
+/* --------------------------------------------------- */
+
+.neon-text-h1 {
+    color: var(--color-accent);
+    text-shadow: 
+        0 0 10px var(--color-accent),
+        0 0 20px var(--color-accent-shadow),
+        0 0 40px var(--color-accent-shadow),
+        0 0 60px var(--color-accent-shadow);
+    letter-spacing: 0.05em;
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, var(--color-accent), #fff, var(--color-accent));
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 3s linear infinite;
 }
