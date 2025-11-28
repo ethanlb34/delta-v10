@@ -5,6 +5,9 @@ let currentPage = 1;
 let currentFilteredGames = [];
 
 let lastLaunchedGame = { link: null, name: null }; 
+let currentFilterType = 'All Games'; 
+let currentView = 'catalog'; // 💥 NEW: State to track the current view: 'catalog' or 'favorites'
+const FAVORITES_STORAGE_KEY = 'delta_game_favorites'; // 💥 NEW: Local storage key
 
 const MOCK_GAMES = [
 { name: "UGS Library", path: "gamelibrary.html", type: "Action", image: "gamelibrary.png" },
@@ -55,7 +58,7 @@ const MOCK_GAMES = [
 { name: "Chess", path: "clchess.html", type: "Board Game", image: "clchess.png" },
 { name: "Clash Royale", path: "clclashofvikings.html", type: "Strategy", image: "clclashofvikings.png" },
 { name: "Cluster Rush", path: "clclusterrush.html", type: "Arcade", image: "clclusterrush.jpg" },
-{ name: "Cod Zombies", path: "codzombies.html", type: "Shooter", image: "codzombies.png" },
+{ name: "Cod Zombies", path: "clcodzombies.html", type: "Shooter", image: "codzombies.png" },
 { name: "Cookie Clicker", path: "clcookieclickercool.html", type: "Clicker", image: "clcookieclickercool.png" },
 { name: "Cooking Mama 3", path: "clcookingmama3.html", type: "Simulation", image: "clcookingmama3.png" },
 { name: "Core Ball", path: "clcoreball.html", type: "Arcade", image: "clcoreball.png" },
@@ -238,6 +241,62 @@ const MOCK_GAMES = [
 ];
 
 /**
+ * Local Storage Functions for Favorites 💥 NEW
+ */
+function getFavorites() {
+    try {
+        const stored = localStorage.getItem(FAVORITES_STORAGE_KEY);
+        // Returns an array of game paths
+        return stored ? JSON.parse(stored) : [];
+    } catch (e) {
+        console.error("Error retrieving favorites from localStorage:", e);
+        return [];
+    }
+}
+
+function saveFavorites(favorites) {
+    try {
+        localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(favorites));
+    } catch (e) {
+        console.error("Error saving favorites to localStorage:", e);
+    }
+}
+
+/**
+ * Public function to toggle a game's favorite status.
+ * @param {string} gamePath - The path of the game to toggle (used as unique ID).
+ */
+window.toggleFavorite = function(gamePath) { 
+    const favorites = getFavorites();
+    const index = favorites.indexOf(gamePath);
+
+    if (index > -1) {
+        // Unfavorite (remove)
+        favorites.splice(index, 1);
+    } else {
+        // Favorite (add)
+        favorites.push(gamePath);
+    }
+    
+    saveFavorites(favorites);
+    updateFavoritesCount(); // Update the count badge on the Favorites button
+    
+    // Rerender the grid to show the updated star icon or reflect changes in the favorites view
+    renderGames(); 
+};
+
+/**
+ * Updates the count badge on the Favorites button. 💥 NEW
+ */
+window.updateFavoritesCount = function() {
+    const countSpan = document.getElementById('favoritesCount');
+    if (countSpan) {
+        countSpan.textContent = getFavorites().length;
+    }
+}
+
+
+/**
  * Retrieves the image URL for a given game path.
  * @param {string} path - The path to the game HTML file.
  * @returns {string} The full image URL.
@@ -278,7 +337,7 @@ window.toggleFullscreen = function() {
         } else if (document.webkitExitFullscreen) { /* Safari */
             document.webkitExitFullscreen();
         } else if (document.msExitFullscreen) { /* IE11 */
-            document.msRequestFullscreen();
+            wrapper.msRequestFullscreen();
         }
     }
 };
@@ -292,6 +351,7 @@ window.closeGameEmbed = function() {
     const gameGrid = document.getElementById('gameGrid');
     const paginationContainer = document.getElementById('pagination');
     const searchInput = document.getElementById('searchInput'); 
+    const catalogContainer = document.getElementById('catalogDropdownContainer'); 
     const gameWindow = document.getElementById('game-window');
 
     if (container) {
@@ -316,6 +376,9 @@ window.closeGameEmbed = function() {
     }
     if (searchInput) {
         searchInput.parentElement.style.display = 'block'; 
+    }
+    if (catalogContainer) { 
+        catalogContainer.style.display = 'flex';
     }
 };
 
@@ -484,8 +547,7 @@ window.playGameTransition = function(gameLink, name, windowTitle) {
 // ------------------------------------------------------------------
 
 /**
- * 💥 MODIFIED EMBED FUNCTION: Now shows a 'Play Now' button with game image background.
- * Also updates the "Play Fullscreen" button with the game image.
+ * Public function to open a game in the embedded viewer.
  * @param {string} path - The path to the game HTML file.
  * @param {string} name - The name of the game.
  */
@@ -512,8 +574,9 @@ window.openGame = function(path, name) {
     const gameGrid = document.getElementById('gameGrid');
     const paginationContainer = document.getElementById('pagination');
     const searchInput = document.getElementById('searchInput');    
+    const catalogContainer = document.getElementById('catalogDropdownContainer'); 
     const gameTitleDisplay = document.getElementById('game-title-display');
-    const gameWindow = document.getElementById('game-window'); // Needed for CSS injection
+    const gameWindow = document.getElementById('game-window'); 
 
     if (!embedContainer || !gameFrameWrapper || !gameWindow) {
         console.error("Critical Error: Required game embed elements not found. Check HTML structure.");
@@ -528,6 +591,7 @@ window.openGame = function(path, name) {
     if (gameGrid) gameGrid.style.display = 'none';
     if (paginationContainer) paginationContainer.style.display = 'none';
     if (searchInput) searchInput.parentElement.style.display = 'none';
+    if (catalogContainer) catalogContainer.style.display = 'none'; 
     if (gameTitleDisplay) gameTitleDisplay.textContent = name;
     
     // Store the game link and name
@@ -536,24 +600,6 @@ window.openGame = function(path, name) {
         lastLaunchedGame.name = name;
     }
 
-    // 💥 NEW: Update the 'Play Fullscreen' button with the game image (assumes HTML structure)
-    const newWindowButtonImageContainer = document.getElementById('new-window-image');
-    if (newWindowButtonImageContainer) {
-        const gameName = name.replace(/'/g, "\\'");
-        
-        // Remove existing image first
-        newWindowButtonImageContainer.innerHTML = ''; 
-
-        if (finalImageUrl) {
-            newWindowButtonImageContainer.innerHTML = `
-                <img src="${finalImageUrl}" 
-                     alt="${gameName} Thumbnail" 
-                     class="game-embed-button-image"
-                     onerror="this.onerror=null; this.src='https://placehold.co/100x40/1e293b/06b6d4?text=${gameName.replace(/\s/g, '+')}';">
-            `;
-        }
-    }
-    
     // 3. Create the Play Now screen and button
     const safeLink = gameLink.replace(/'/g, "\\'");
     const safeName = name.replace(/'/g, "\\'");
@@ -738,7 +784,7 @@ function renderPagination(games) {
 // ------------------------------------------------------------------
 
 /**
- * Renders the game cards onto the grid based on the current page number. (MODIFIED)
+ * Renders the game cards onto the grid based on the current page number and view. 💥 MODIFIED
  * NOTE: This is an internal helper function.
  */
 function renderGames() {
@@ -748,34 +794,53 @@ function renderGames() {
         return;
     }
 
-    // Ensure gameGrid is visible before rendering cards (in case it was hidden by openGame)
+    // Check game embed state
     const embedContainer = document.getElementById('game-embed-container');
     if (embedContainer && embedContainer.style.display !== 'none') {
-        // If game is currently embedded, don't re-render the grid
-        return;      
+        return;
     }
     
     gameGrid.innerHTML = ''; // Clear existing cards
 
+    let gamesSource = [];
+    let isFavoritesView = currentView === 'favorites'; 
+
+    if (isFavoritesView) {
+        // Filter MOCK_GAMES by paths in favorites list
+        const favoritesPaths = getFavorites();
+        // gamesSource will contain the actual game objects for rendering
+        gamesSource = MOCK_GAMES.filter(game => favoritesPaths.includes(game.path));
+    } else {
+        // Catalog/Search view uses the pre-filtered list
+        gamesSource = currentFilteredGames;
+    }
+    
     const startIndex = (currentPage - 1) * GAMES_PER_PAGE;
     const endIndex = startIndex + GAMES_PER_PAGE;
 
-    // Slice the current filtered list for the current page
-    const gamesToRender = currentFilteredGames.slice(startIndex, endIndex);
+    // Slice the source list for the current page
+    const gamesToRender = gamesSource.slice(startIndex, endIndex);
 
-    if (gamesToRender.length === 0 && currentFilteredGames.length > 0) {
-        // If we landed on an empty page, reset to page 1
-        currentPage = 1;
-        renderGames();
+    if (gamesToRender.length === 0) {
+        // Handle no results case
+        let noResultsText;
+        if (isFavoritesView) {
+            noResultsText = `You haven't added any games to your favorites yet. Click the <span class="text-yellow-400">⭐</span> on a game card to add it!`;
+        } else {
+            const query = document.getElementById('searchInput').value;
+            const typeText = currentFilterType === 'All Games' ? '' : ` in ${currentFilterType}`;
+            noResultsText = query
+                ? `No games matched your search query "${query}"${typeText}.`
+                : `No games found in the **${currentFilterType}** catalog.`;
+        }
+          
+        gameGrid.innerHTML = `<p class="col-span-full text-center text-xl text-slate-500 p-8">${noResultsText}</p>`;
+        renderPagination([]); // Clear pagination
         return;
-    } else if (currentFilteredGames.length === 0) {
-          gameGrid.innerHTML = '<p class="col-span-full text-center text-xl text-slate-500 p-8">No games matched your search query.</p>';
-          renderPagination([]); // Clear pagination
-          return;
     }
 
 
-    const html = gamesToRender.map((game, index) => { // Added index for unique ID
+    const html = gamesToRender.map((game, index) => { 
         if (!game || !game.name || !game.path || !game.image) return '';
 
         const baseImageUrl = game.image;
@@ -784,7 +849,6 @@ function renderGames() {
         if (baseImageUrl.startsWith('http')) {
             imageUrl = baseImageUrl;
         } else {
-            // Correctly forms the CDN URL using the root path
             imageUrl = `${CDN_BASE_URL}${baseImageUrl}`;
         }
 
@@ -792,16 +856,31 @@ function renderGames() {
 
         const safePath = game.path.replace(/'/g, "\\'");
         const safeName = game.name.replace(/'/g, "\\'");
+        
+        // 💥 NEW: Check if the current game is favorited
+        const isFavorited = getFavorites().includes(game.path);
+        
+        // 💥 NEW: Star icon HTML/Logic
+        const favoriteButtonHtml = `
+            <button onclick="event.stopPropagation(); toggleFavorite('${safePath}')"
+                    title="${isFavorited ? 'Unfavorite Game' : 'Favorite Game'}"
+                    class="absolute top-2 right-2 p-1.5 rounded-full z-30 transition duration-150 transform-gpu
+                           ${isFavorited ? 'text-yellow-400 bg-slate-900/80 hover:scale-110 shadow-lg' : 'text-slate-400/90 bg-slate-900/60 hover:text-yellow-400 hover:scale-110'}">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+                    <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd" />
+                </svg>
+            </button>
+        `;
 
         const cardId = `game-card-${index}`;
 
-        // 💥 MODIFIED: Removed 'bg-slate-900' and added 'game-card-animated' and 'animation-delay' for staggered load.
         return `
             <div class="game-card-perspective-container relative">
                 <div id="${cardId}" onclick="openGame('${safePath}', '${safeName}')"
                     class="game-card block rounded-xl shadow-lg overflow-hidden border-2 border-slate-700 cursor-pointer transition-all duration-300 transform-gpu relative z-10 hover:z-20 game-card-animated"
                     style="animation-delay: ${index * 0.05}s;">
-                    <div class="game-card-image-wrapper h-32 sm:h-40 overflow-hidden transition-colors duration-300">
+                    
+                    ${favoriteButtonHtml} <div class="game-card-image-wrapper h-32 sm:h-40 overflow-hidden transition-colors duration-300">
                         <img src="${imageUrl}"
                             onerror="this.onerror=null; this.src='${placeholderUrl}';"
                             alt="${game.name} Thumbnail"
@@ -817,19 +896,16 @@ function renderGames() {
 
     gameGrid.innerHTML = html;
 
-    // 💥 Apply the tilt effect and clean up animation class
+    // Apply the tilt effect
     document.querySelectorAll('.game-card').forEach(card => {
         addTiltEffect(card);
-        
-        // CRITICAL FIX for tilt: Remove the animation class once the animation is done 
-        // to prevent CSS from overriding the JS 'transform' property used for tilting.
         card.addEventListener('animationend', () => {
             card.classList.remove('game-card-animated');
-        }, { once: true }); // Automatically remove listener after first run
+        }, { once: true });
     });
 
     // Always render pagination after rendering the games
-    renderPagination(currentFilteredGames);
+    renderPagination(gamesSource);
 }
 
 // ------------------------------------------------------------------
@@ -839,7 +915,8 @@ function renderGames() {
  * @param {number} pageNumber - The page to switch to.
  */
 window.changePage = function(pageNumber) {
-    const totalPages = Math.ceil(currentFilteredGames.length / GAMES_PER_PAGE);
+    const sourceList = currentView === 'favorites' ? getFavorites() : currentFilteredGames;
+    const totalPages = Math.ceil(sourceList.length / GAMES_PER_PAGE);
 
     // Prevent going out of bounds
     if (pageNumber < 1 || pageNumber > totalPages) {
@@ -854,27 +931,208 @@ window.changePage = function(pageNumber) {
 // ------------------------------------------------------------------
 
 /**
- * Filters the games based on the search query. Called by the search input's oninput.
+ * Public function to filter games by type and search query. 💥 MODIFIED
+ * Resets view to 'catalog' if a new filter/search is applied.
+ * @param {string} query - The search query from the input field.
+ * @param {string} [type=currentFilterType] - The game type to filter by. Defaults to the current active filter.
  */
-window.filterGames = function(query) {
+window.filterGames = function(query, type = currentFilterType) {
+    
+    // If a new search/filter is applied, switch back to 'catalog' view
+    if (currentView === 'favorites' || currentFilterType !== type) {
+        switchView('catalog', false); // Switch view but do not re-render yet
+    }
+    
     const lowerCaseQuery = query.toLowerCase();
+    currentFilterType = type; // Update the global state
 
-    // 1. Filter the entire MOCK_GAMES list
-    currentFilteredGames = MOCK_GAMES.filter(game => {
+    // 1. Determine the base list to filter from (all games or a pre-filtered list)
+    let gamesToSearch = MOCK_GAMES;
+    if (currentFilterType !== 'All Games') {
+        gamesToSearch = MOCK_GAMES.filter(game => game.type === currentFilterType);
+    }
+    
+    // 2. Filter by search query on the determined list
+    currentFilteredGames = gamesToSearch.filter(game => {
         if (!game || !game.name) return false;
 
+        // Search in name AND type
         return game.name.toLowerCase().includes(lowerCaseQuery) ||
                (game.type && game.type.toLowerCase().includes(lowerCaseQuery));
     });
 
-    // 2. Reset the page number and render the first page of results
+    // 3. Update the dropdown button text
+    const dropdownButton = document.getElementById('catalogDropdownButton');
+    if (dropdownButton) {
+        dropdownButton.textContent = currentFilterType === 'All Games' ? 'Catalog: All Games' : `Catalog: ${currentFilterType}`;
+        dropdownButton.classList.remove('active'); // Close the dropdown visually
+    }
+
+    // 4. Reset the page number and render the first page of results
     currentPage = 1;
     renderGames();
+    
+    // Ensure the search input is updated if the filter was triggered by the dropdown
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput && searchInput.value !== query) {
+        searchInput.value = query; // Keep the search bar consistent
+    }
+    
+    // Update active button visual state
+    updateFilterButtonVisuals();
+}
+
+/**
+ * Public function to switch the main game grid view between 'catalog' and 'favorites'. 💥 NEW
+ * @param {string} viewName - 'catalog' or 'favorites'.
+ * @param {boolean} [shouldRender=true] - Whether to immediately call renderGames().
+ */
+window.switchView = function(viewName, shouldRender = true) { 
+    if (currentView === viewName && shouldRender) return; 
+
+    currentView = viewName;
+    currentPage = 1; // Always reset to the first page when switching views
+    
+    // Clear search bar and reset catalog filter when switching to favorites
+    if (viewName === 'favorites') {
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) searchInput.value = '';
+        currentFilterType = 'All Games'; 
+    }
+    
+    updateFilterButtonVisuals();
+    
+    if (shouldRender) {
+        renderGames();
+    }
+}
+
+/**
+ * Updates the visual state of the Catalog and Favorites buttons. 💥 NEW
+ */
+function updateFilterButtonVisuals() { 
+    const catalogButton = document.getElementById('catalogDropdownButton');
+    const favoritesButton = document.getElementById('favoritesViewButton');
+    
+    if (catalogButton) {
+        catalogButton.textContent = currentFilterType === 'All Games' ? 'Catalog: All Games' : `Catalog: ${currentFilterType}`;
+        // Toggle the active-view-button class based on the current view
+        catalogButton.classList.toggle('active-view-button', currentView === 'catalog');
+        catalogButton.classList.remove('bg-cyan-600', 'text-white'); // Remove static classes
+        catalogButton.classList.add('bg-slate-800', 'text-cyan-400'); // Add default classes
+    }
+    
+    if (favoritesButton) {
+        favoritesButton.classList.toggle('active-view-button', currentView === 'favorites');
+    }
+}
+
+
+/**
+ * Public function to toggle the visibility of the catalog dropdown menu.
+ */
+window.toggleCatalogDropdown = function() { 
+    const dropdownMenu = document.getElementById('catalogDropdownMenu');
+    const dropdownButton = document.getElementById('catalogDropdownButton');
+    if (!dropdownMenu || !dropdownButton) return;
+
+    // Ensure we are in the catalog view before opening the dropdown
+    if (currentView === 'favorites') {
+        switchView('catalog', true);
+    }
+
+    const isVisible = dropdownMenu.classList.toggle('hidden');
+    dropdownButton.classList.toggle('active', !isVisible);
+
+    // Listen for a click outside the dropdown to close it
+    if (!isVisible) {
+        // Use a slight delay to ensure the current click event finishes
+        setTimeout(() => {
+             document.addEventListener('click', closeDropdownOnOutsideClick);
+        }, 10);
+    } else {
+        document.removeEventListener('click', closeDropdownOnOutsideClick);
+    }
+}
+
+/**
+ * Helper to close the dropdown when clicking outside.
+ */
+function closeDropdownOnOutsideClick(event) { 
+    const dropdownContainer = document.getElementById('catalogDropdownContainer');
+    const dropdownMenu = document.getElementById('catalogDropdownMenu');
+    
+    if (dropdownContainer && !dropdownContainer.contains(event.target)) {
+        dropdownMenu.classList.add('hidden');
+        document.getElementById('catalogDropdownButton').classList.remove('active');
+        document.removeEventListener('click', closeDropdownOnOutsideClick);
+    }
+}
+
+
+/**
+ * Renders the catalog dropdown button and the new favorites button. 💥 MODIFIED & RENAMED
+ */
+function renderFilterButtons() { 
+    const container = document.getElementById('catalogDropdownContainer');
+    if (!container) return;
+
+    // 1. Get unique game types
+    const uniqueTypes = [...new Set(MOCK_GAMES.map(game => game.type))].sort();
+
+    // 2. Build the dropdown menu items
+    let menuItems = `<a href="#" onclick="filterGames(document.getElementById('searchInput').value, 'All Games'); toggleCatalogDropdown(); return false;"
+                       class="block px-4 py-2 text-sm text-white/90 hover:bg-cyan-700/50 transition duration-150">All Games</a>`;
+
+    uniqueTypes.forEach(type => {
+        const safeType = type.replace(/'/g, "\\'");
+        menuItems += `<a href="#" onclick="filterGames(document.getElementById('searchInput').value, '${safeType}'); toggleCatalogDropdown(); return false;"
+                         class="block px-4 py-2 text-sm text-white/90 hover:bg-cyan-700/50 transition duration-150">${type}</a>`;
+    });
+
+    // 3. Construct the full HTML for the two buttons
+    container.innerHTML = `
+        <div class="flex space-x-4">
+        
+            <div class="relative inline-block text-left">
+                <button type="button" id="catalogDropdownButton"
+                    onclick="toggleCatalogDropdown()"
+                    class="inline-flex justify-center w-full rounded-3xl border border-slate-700 shadow-sm px-4 py-3 text-sm font-medium transition duration-150 
+                           bg-slate-800 text-cyan-400 hover:bg-slate-700"
+                    aria-expanded="true" aria-haspopup="true">
+                    Catalog: ${currentFilterType}
+                    <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+                
+                <div id="catalogDropdownMenu"
+                    class="origin-top-left absolute left-0 mt-2 w-56 rounded-xl shadow-2xl bg-slate-900 ring-1 ring-white ring-opacity-10 z-20 hidden"
+                    role="menu" aria-orientation="vertical" aria-labelledby="catalogDropdownButton">
+                    <div class="py-1" role="none">
+                        ${menuItems}
+                    </div>
+                </div>
+            </div>
+            
+            <button type="button" id="favoritesViewButton"
+                onclick="switchView('favorites')"
+                class="inline-flex items-center justify-center rounded-3xl border border-slate-700 shadow-sm px-4 py-3 text-sm font-medium transition duration-150 
+                       bg-slate-800 text-cyan-400 hover:bg-slate-700">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-2 text-yellow-400">
+                    <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd" />
+                </svg>
+                Favorites
+                <span id="favoritesCount" class="ml-2 px-2 py-0.5 text-xs font-semibold rounded-full bg-slate-700 text-white">0</span>
+            </button>
+        </div>
+    `;
+    updateFilterButtonVisuals(); // Set initial active state
 }
 
 
 // ------------------------------------------------------------------
-// 💥 NEW MOUSE HIGHLIGHT LOGIC FOR GAME CARDS 💥
+// MOUSE HIGHLIGHT LOGIC (UNCHANGED)
 // ------------------------------------------------------------------
 
 /**
@@ -898,10 +1156,6 @@ function setupGameCardHighlight() {
 
     if (!gameGrid || !follower) return;
 
-    // We track the mouse relative to the ENTIRE WINDOW (document) 
-    // to keep the light centered correctly, regardless of scroll position.
-    
-    // We'll use the bounding box of the currently hovered card to constrain the light.
     let currentCard = null;
 
     // This listener shows/hides the light and sets the card context
@@ -944,7 +1198,6 @@ function setupGameCardHighlight() {
 
 /**
  * 💥 NEW FUNCTION: Injects reusable CSS classes and keyframes into the document head.
- * FIX: Added Play Fullscreen button styling (new-window-button) and card animation.
  */
 function injectGlobalStyles() {
     if (document.getElementById('global-game-styles')) return;
@@ -971,7 +1224,7 @@ function injectGlobalStyles() {
             opacity: 0; /* Ensures it starts invisible */
         }
 
-        /* 💥 CRITICAL FIX FOR TILTING: Establish 3D context on the card container */
+        /* CRITICAL FIX FOR TILTING: Establish 3D context on the card container */
         .game-card-perspective-container {
             perspective: 1000px; 
         }
@@ -979,11 +1232,19 @@ function injectGlobalStyles() {
         /* Ensure the card itself rotates correctly in 3D space */
         .game-card {
             transform-style: preserve-3d;
-            background-color: transparent !important; /* 💥 USER REQUEST: Force Transparency */
+            background-color: transparent !important; /* Force Transparency */
+        }
+        
+        /* Favorites/Catalog Button Active State 💥 NEW */
+        .active-view-button {
+            background-color: rgb(8 145 178) !important; /* Darker cyan to indicate active state */
+            color: white !important;
+            border-color: rgb(6 182 212) !important;
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
         }
 
 
-        /* 💥 START: EMBEDDED PLAY FULLSCREEN BUTTON STYLING (IMAGE ON TOP) */
+        /* START: EMBEDDED PLAY FULLSCREEN BUTTON STYLING (IMAGE ON TOP) */
         #new-window-button {
             display: flex;
             flex-direction: column; /* Stack image and text vertically (Image on Top) */
@@ -1039,7 +1300,7 @@ function injectGlobalStyles() {
             position: relative;
             z-index: 3; /* Ensure text is visible */
         }
-        /* 💥 END: EMBEDDED PLAY FULLSCREEN BUTTON STYLING */
+        /* END: EMBEDDED PLAY FULLSCREEN BUTTON STYLING */
     `;
     document.head.appendChild(style);
 }
@@ -1051,7 +1312,7 @@ function injectGlobalStyles() {
  * 💥 STARTUP: This function is called by the main SPA router every time the /games page is loaded.
  */
 window.initGameGrid = function() {
-    // 0. Inject reusable global styles (NEW)
+    // 0. Inject reusable global styles
     injectGlobalStyles();
     
     // 1. Ensure the highlight element exists when the page is loaded (only runs once)
@@ -1060,24 +1321,33 @@ window.initGameGrid = function() {
         setupGameCardHighlight();
     }
     
+    // 2. Render the Filter Buttons (Catalog Dropdown and Favorites Button) 💥 MODIFIED/RENAMED
+    renderFilterButtons(); 
+    updateFavoritesCount(); 
+
     // This logic ensures the CDN path is being used before trying to load games
     if (CDN_BASE_URL.includes("ethanlb34/Delta-Games@main/")) {
         // Load all games initially into the filtered list
         currentFilteredGames = MOCK_GAMES;
-        currentPage = 1; // Reset to page 1 on load
+        currentPage = 1; 
+        currentFilterType = 'All Games'; 
+        currentView = 'catalog'; // Ensure view is set to catalog on init
         
         // Ensure the grid/pagination are visible on page load (in case user navigated back)
         const gameGrid = document.getElementById('gameGrid');
         const embedContainer = document.getElementById('game-embed-container');
         const pagination = document.getElementById('pagination');
         const searchInput = document.getElementById('searchInput');
+        const catalogContainer = document.getElementById('catalogDropdownContainer'); 
 
         if (gameGrid) gameGrid.style.display = 'grid';
         if (embedContainer) embedContainer.style.display = 'none';
         if (pagination) pagination.style.display = 'flex';
         if (searchInput) searchInput.parentElement.style.display = 'block';
+        if (catalogContainer) catalogContainer.style.display = 'flex'; 
 
         renderGames();
+        updateFilterButtonVisuals(); // Ensure correct button is active on load
     } else {
         const gameGrid = document.getElementById('gameGrid');
         if (gameGrid) {
