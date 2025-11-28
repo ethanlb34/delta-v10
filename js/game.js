@@ -269,6 +269,7 @@ function saveFavorites(favorites) {
 window.toggleFavorite = function(gamePath) { 
     const favorites = getFavorites();
     const index = favorites.indexOf(gamePath);
+    let isFavoritedAfter = false;
 
     if (index > -1) {
         // Unfavorite (remove)
@@ -276,13 +277,33 @@ window.toggleFavorite = function(gamePath) {
     } else {
         // Favorite (add)
         favorites.push(gamePath);
+        isFavoritedAfter = true;
     }
     
     saveFavorites(favorites);
     updateFavoritesCount(); // Update the count badge on the Favorites button
     
-    // Rerender the grid to show the updated star icon or reflect changes in the favorites view
-    renderGames(); 
+    // Find and update the star button without re-rendering the entire grid
+    const cards = document.querySelectorAll('.game-card');
+    cards.forEach(card => {
+        const gameLink = card.getAttribute('onclick');
+        // Check if this is the right card
+        if (gameLink && gameLink.includes(gamePath)) {
+            const button = card.querySelector('button');
+            if (button) {
+                // Update the button styling
+                if (isFavoritedAfter) {
+                    button.classList.remove('text-slate-400/90', 'bg-slate-900/60', 'hover:text-yellow-400');
+                    button.classList.add('text-yellow-400', 'bg-slate-900/80');
+                    button.setAttribute('title', 'Unfavorite Game');
+                } else {
+                    button.classList.remove('text-yellow-400', 'bg-slate-900/80');
+                    button.classList.add('text-slate-400/90', 'bg-slate-900/60', 'hover:text-yellow-400');
+                    button.setAttribute('title', 'Favorite Game');
+                }
+            }
+        }
+    });
 };
 
 /**
@@ -647,7 +668,7 @@ window.openGame = function(path, name) {
                 border: 1px solid rgba(255, 255, 255, 0.2);
             }
             .neon-glow-button {
-                box-shadow: 0 0 15px rgba(46, 220, 255, 0.7);
+                box-shadow: 0 0 15px var(--color-accent-shadow);
             }
             /* If Tailwind's 'blur-lg' is not defined, this fallback CSS would be needed: */
             #game-transition-image {
@@ -672,14 +693,15 @@ window.openGame = function(path, name) {
  * @param {HTMLElement} card - The game card element (the outer container).
  */
 function addTiltEffect(card) {
-    const maxTilt = 12; // Adjusted for a slightly smoother effect
-    const neonGlow = '0 0 40px 15px rgba(46, 220, 255, 0.7), 0 0 80px 10px rgba(46, 220, 255, 0.2)'; // More layered and intense glow
-    const scaleFactor = 1.05; // Slightly less extreme scale for better fit on grid
+    const maxTilt = 12;
+    const scaleFactor = 1.05;
     
-    // FASTER: Decreased transition duration for quicker response
     card.style.transition = 'transform 0.15s ease-out, box-shadow 0.15s ease-out, border-color 0.15s ease-out';
     card.style.willChange = 'transform, box-shadow';
     card.style.transformOrigin = 'center';
+
+    const getAccentColor = () => getComputedStyle(document.documentElement).getPropertyValue('--color-accent').trim();
+    const getAccentShadow = () => getComputedStyle(document.documentElement).getPropertyValue('--color-accent-shadow').trim();
 
     card.addEventListener('mousemove', (e) => {
         const cardRect = card.getBoundingClientRect();
@@ -689,42 +711,38 @@ function addTiltEffect(card) {
         const xPos = (e.clientX - centerX) / (cardRect.width / 2);
         const yPos = (e.clientY - centerY) / (cardRect.height / 2);
 
-        // Calculate rotation (Invert Y for natural tilt effect)
         const rotY = xPos * maxTilt;
         const rotX = yPos * maxTilt * -1; 
         
-        // Apply transform: scale, 3D tilt, and subtle lift (translateZ)
-        // Note: Using translateZ(30px) for a deeper 3D pop.
         card.style.transform = `scale(${scaleFactor}) rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(30px)`; 
         
-        // Apply a dark, solid background to the card image wrapper on hover to enhance the neon border pop
         const imgWrapper = card.querySelector('.game-card-image-wrapper');
         if (imgWrapper) {
-            imgWrapper.style.backgroundColor = 'rgba(0, 0, 0, 0.8)'; // Dark overlay for image
+            imgWrapper.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
         }
 
-        card.style.boxShadow = neonGlow;
-        card.style.borderColor = 'rgb(46 220 255)'; // Bright cyan border
+        const accentColor = getAccentColor();
+        const accentShadow = getAccentShadow();
+        card.style.boxShadow = `0 0 40px 15px ${accentShadow}, 0 0 80px 10px ${accentShadow}`;
+        card.style.borderColor = accentColor;
     });
 
     card.addEventListener('mouseleave', () => {
-        // Reset the card to its default state 
         card.style.transform = `scale(1) rotateX(0deg) rotateY(0deg) translateZ(0)`;
         
-        // Use a more distinct default shadow for better initial looks
-        card.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5), 0 0 3px rgba(46, 220, 255, 0.1)'; 
-        card.style.borderColor = 'rgb(71 85 105)'; // slate-700
+        const accentShadow = getAccentShadow();
+        card.style.boxShadow = `0 0 10px rgba(0, 0, 0, 0.5), 0 0 3px ${accentShadow}`;
+        card.style.borderColor = 'rgb(71 85 105)';
         
-        // Reset the image wrapper background
         const imgWrapper = card.querySelector('.game-card-image-wrapper');
         if (imgWrapper) {
             imgWrapper.style.backgroundColor = 'transparent'; 
         }
     });
 
-    // Initial setup: Apply a subtle static style (default shadow and 3D context)
-    card.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5), 0 0 3px rgba(46, 220, 255, 0.1)';
-    card.style.transform = 'translateZ(0)'; // Establish 3D context
+    const accentShadow = getAccentShadow();
+    card.style.boxShadow = `0 0 10px rgba(0, 0, 0, 0.5), 0 0 3px ${accentShadow}`;
+    card.style.transform = 'translateZ(0)';
 }
 // ------------------------------------------------------------------
 
@@ -747,7 +765,7 @@ function renderPagination(games) {
     pagesHtml += `<button onclick="changePage(${currentPage - 1})"
         ${currentPage === 1 ? 'disabled' : ''}
         class="px-4 py-2 rounded-lg text-slate-400 bg-slate-800 border border-slate-700
-        ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-cyan-700 hover:text-white transition duration-150'}">
+        ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-baby-blue/70 hover:text-white transition duration-150'}">
         &laquo; Previous
     </button>`;
 
@@ -765,7 +783,7 @@ function renderPagination(games) {
         const isActive = i === currentPage;
         pagesHtml += `<button onclick="changePage(${i})"
             class="px-4 py-2 rounded-lg font-bold
-            ${isActive ? 'bg-cyan-600 text-white' : 'bg-slate-800 text-cyan-400 border border-slate-700 hover:bg-cyan-700 hover:text-white transition duration-150'}">
+            ${isActive ? 'bg-baby-blue text-dark-navy' : 'bg-slate-800 text-baby-blue border border-slate-700 hover:bg-baby-blue/70 hover:text-white transition duration-150'}">
             ${i}
         </button>`;
     }
@@ -774,7 +792,7 @@ function renderPagination(games) {
     pagesHtml += `<button onclick="changePage(${currentPage + 1})"
         ${currentPage === totalPages ? 'disabled' : ''}
         class="px-4 py-2 rounded-lg text-slate-400 bg-slate-800 border border-slate-700
-        ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-cyan-700 hover:text-white transition duration-150'}">
+        ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-baby-blue/70 hover:text-white transition duration-150'}">
         Next &raquo;
     </button>`;
 
@@ -1018,8 +1036,8 @@ function updateFilterButtonVisuals() {
         catalogButton.textContent = currentFilterType === 'All Games' ? 'Catalog: All Games' : `Catalog: ${currentFilterType}`;
         // Toggle the active-view-button class based on the current view
         catalogButton.classList.toggle('active-view-button', currentView === 'catalog');
-        catalogButton.classList.remove('bg-cyan-600', 'text-white'); // Remove static classes
-        catalogButton.classList.add('bg-slate-800', 'text-cyan-400'); // Add default classes
+        catalogButton.classList.remove('bg-baby-blue', 'text-white'); // Remove static classes
+        catalogButton.classList.add('bg-slate-800', 'text-baby-blue'); // Add default classes
     }
     
     if (favoritesButton) {
@@ -1082,12 +1100,12 @@ function renderFilterButtons() {
 
     // 2. Build the dropdown menu items
     let menuItems = `<a href="#" onclick="filterGames(document.getElementById('searchInput').value, 'All Games'); toggleCatalogDropdown(); return false;"
-                       class="block px-4 py-2 text-sm text-white/90 hover:bg-cyan-700/50 transition duration-150">All Games</a>`;
+                       class="block px-4 py-2 text-sm text-white/90 hover:bg-baby-blue/50 transition duration-150">All Games</a>`;
 
     uniqueTypes.forEach(type => {
         const safeType = type.replace(/'/g, "\\'");
         menuItems += `<a href="#" onclick="filterGames(document.getElementById('searchInput').value, '${safeType}'); toggleCatalogDropdown(); return false;"
-                         class="block px-4 py-2 text-sm text-white/90 hover:bg-cyan-700/50 transition duration-150">${type}</a>`;
+                         class="block px-4 py-2 text-sm text-white/90 hover:bg-baby-blue/50 transition duration-150">${type}</a>`;
     });
 
     // 3. Construct the full HTML for the two buttons
@@ -1098,7 +1116,7 @@ function renderFilterButtons() {
                 <button type="button" id="catalogDropdownButton"
                     onclick="toggleCatalogDropdown()"
                     class="inline-flex justify-center w-full rounded-3xl border border-slate-700 shadow-sm px-4 py-3 text-sm font-medium transition duration-150 
-                           bg-slate-800 text-cyan-400 hover:bg-slate-700"
+                           bg-slate-800 text-baby-blue hover:bg-slate-700"
                     aria-expanded="true" aria-haspopup="true">
                     Catalog: ${currentFilterType}
                     <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -1118,7 +1136,7 @@ function renderFilterButtons() {
             <button type="button" id="favoritesViewButton"
                 onclick="switchView('favorites')"
                 class="inline-flex items-center justify-center rounded-3xl border border-slate-700 shadow-sm px-4 py-3 text-sm font-medium transition duration-150 
-                       bg-slate-800 text-cyan-400 hover:bg-slate-700">
+                       bg-slate-800 text-baby-blue hover:bg-slate-700">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-2 text-yellow-400">
                     <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd" />
                 </svg>
@@ -1140,10 +1158,9 @@ function renderFilterButtons() {
  */
 function injectGameHighlightElement() {
     const highlightHtml = `
-        <div id="game-highlight-follower" class="absolute w-40 h-40 rounded-full bg-cyan-400/20 blur-2xl pointer-events-none" 
+        <div id="game-highlight-follower" class="absolute w-40 h-40 rounded-full bg-baby-blue/20 blur-2xl pointer-events-none" 
              style="opacity: 0; transition: opacity 0.3s ease-out; z-index: 10;"></div>
     `;
-    // Inject into the body once
     document.body.insertAdjacentHTML('afterbegin', highlightHtml);
 }
 
@@ -1237,21 +1254,21 @@ function injectGlobalStyles() {
         
         /* Favorites/Catalog Button Active State 💥 NEW */
         .active-view-button {
-            background-color: rgb(8 145 178) !important; /* Darker cyan to indicate active state */
-            color: white !important;
-            border-color: rgb(6 182 212) !important;
-            box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+            background-color: var(--color-accent) !important;
+            color: var(--color-background) !important;
+            border-color: var(--color-accent) !important;
+            box-shadow: 0 0 10px var(--color-accent-shadow);
         }
 
 
         /* START: EMBEDDED PLAY FULLSCREEN BUTTON STYLING (IMAGE ON TOP) */
         #new-window-button {
             display: flex;
-            flex-direction: column; /* Stack image and text vertically (Image on Top) */
+            flex-direction: column;
             align-items: center;
             justify-content: flex-start; 
-            background-color: #06b6d4; /* Cyan background */
-            color: white;
+            background-color: var(--color-accent);
+            color: var(--color-background);
             border: none;
             border-radius: 0.5rem; 
             padding: 0;
@@ -1265,20 +1282,20 @@ function injectGlobalStyles() {
         }
         
         #new-window-button:hover {
-            background-color: #0891b2; /* Darker cyan on hover */
+            filter: brightness(0.85);
             transform: scale(1.02);
-            box-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+            box-shadow: 0 0 20px var(--color-accent-shadow);
         }
 
         #new-window-image {
             width: 100%;
-            height: 75%; /* Image takes up most of the button's height */
-            background-color: #1e293b; /* slate-800 placeholder color */
+            height: 75%;
+            background-color: #1e293b;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            border-bottom: 2px solid #0891b2;
+            border-bottom: 2px solid var(--color-accent);
             position: relative;
             z-index: 2; 
         }
@@ -1316,10 +1333,11 @@ window.initGameGrid = function() {
     injectGlobalStyles();
     
     // 1. Ensure the highlight element exists when the page is loaded (only runs once)
-    if (!document.getElementById('game-highlight-follower')) {
-        injectGameHighlightElement();
-        setupGameCardHighlight();
-    }
+    // DISABLED: Blue highlight element removed
+    // if (!document.getElementById('game-highlight-follower')) {
+    //     injectGameHighlightElement();
+    //     setupGameCardHighlight();
+    // }
     
     // 2. Render the Filter Buttons (Catalog Dropdown and Favorites Button) 💥 MODIFIED/RENAMED
     renderFilterButtons(); 
