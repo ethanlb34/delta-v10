@@ -46,6 +46,8 @@ document.addEventListener('DOMContentLoaded',async()=>{
     const form=document.getElementById('login-form');
     const loginError=document.getElementById('login-error');
 
+    if (!form) return; // Exit if not on login page
+
     form.addEventListener('submit', async e=>{
         e.preventDefault();
         const user=document.getElementById('username').value.trim();
