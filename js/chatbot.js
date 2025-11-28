@@ -5,7 +5,7 @@ import { GoogleGenAI } from 'https://cdn.jsdelivr.net/npm/@google/genai@1.21.0/d
 
 // WARNING: In a real app, NEVER expose a real API key client-side.
 // You must replace this with your actual key for the AI to work.
-const GEMINI_API_KEY = "AIzaSyCq16dgsEll7mEFhSVBYkhRyDKytqJ7XME"; 
+const GEMINI_API_KEY = "REMOVED"; 
 
 // Global variables for AI client and history
 let ai;
