@@ -18,13 +18,8 @@
     <link rel="stylesheet" href="/css/chatbot.css">
     <link rel="stylesheet" href="/css/game.css">
     <link rel="stylesheet" href="/css/chat.css">
-
     <link href="https://cdn.jsdelivr.net/gh/google/code-prettify@master/src/prettify.css" rel="stylesheet" />
-
-    <script src="/public/baremux/index.js"></script> 
-    <script src="/public/epoxy/index.mjs"></script>
-    <script src="/public/scram/scramjet.all.js"></script> 
-    <script src="main.js"></script>
+    
     <script src="/js/tailwind.js"></script>
     <script src="/js/login.js"></script>
     <script src="/js/redirect.js"></script>
@@ -242,15 +237,19 @@
             `,
 'games': `
 <div class="max-w-7xl mx-auto">
-    <div class="mb-8 sticky top-0 z-10 bg-slate-900/95 backdrop-blur-sm p-4 -mx-4 sm:mx-0 rounded-xl shadow-lg">
+
+    <div class="mb-4 sticky top-0 z-10 bg-slate-900/95 backdrop-blur-sm p-4 -mx-4 sm:mx-0 rounded-xl shadow-lg">
         <input type="text" id="searchInput" placeholder="Search by game title..."
             class="w-full p-3 rounded-3xl bg-slate-800 border-0 focus:ring-0 focus:border-cyan-400 focus:shadow-xl focus:shadow-cyan-400/50 text-white placeholder-slate-500 transition duration-300 ease-in-out focus:outline-none"
             oninput="filterGames(this.value)">
     </div>
-    
+
+    <div id="catalogDropdownContainer" class="flex justify-center mb-8"> 
+        </div>
+        
     <div id="game-embed-container" 
         class="absolute z-50 flex flex-col justify-center items-center bg-slate-950/90 p-4 top-0 left-0 right-0 bottom-0"
-        style="display: flex;">
+        style="display: none;">
 
         <div id="game-window"
             class="w-full max-w-10xl flex-shrink bg-slate-950 rounded-2xl overflow-hidden
@@ -749,22 +748,22 @@
             <div id="extension-tool-wrapper">
                 <div class="header-content">
                   <i class="fas fa-sliders logo-icon"></i>
-                  <h1>Random Word Generator</h1>
+                  <h1>Exthang3r Extension Exploit</h1>
                 </div>
 
                 <div class="container">
                   <p class="info-text" style="margin-bottom: 1.5rem;">
-                    This random word generator generates thousands of random words in less than a minute.
+                    This Exthang3r Extension Exploit generates thousands of random frames in the selected extension.
                   </p>
 
                   <div class="selection-area">
-                    <label for="ext_extensionSelect" style="display:block; color: #a6adc8; margin-bottom: 0.5rem;">Select word style:</label>
+                    <label for="ext_extensionSelect" style="display:block; color: #a6adc8; margin-bottom: 0.5rem;">Select School Extension:</label>
                     <select id="ext_extensionSelect" class="dropdown"></select>
                   </div>
 
                   <div class="slider-area">
                     <label for="ext_resourceIntensity" style="display:block; color: #a6adc8; margin-bottom: 0.5rem;">
-                      Adjust the number of words to generate below.
+                      Adjust the number of frames to generate below.
                     </label>
                     <div class="slider-container" style="display: flex; gap: 1rem; align-items: center;">
                       <input type="number" id="ext_resourceIntensity" min="100" max="15000" value="2000" step="100">
@@ -916,6 +915,8 @@
         <ul class="text-center font-share-tech list-none space-y-1 max-w-2xl mx-auto mb-8 animate-in" style="animation-delay: 0.4s;">
             <li class="text-lg text-gray-400 p-1 rounded-md">- Chrome history spammer added</li>
             <li class="text-lg text-gray-400 p-1 rounded-md">- Extension hanger added</li>
+            <li class="text-lg text-gray-400 p-1 rounded-md">- Favorited Games added</li>
+            <li class="text-lg text-gray-400 p-1 rounded-md">- Catagory List added</li>
         </ul>
     </div>
 </section>
