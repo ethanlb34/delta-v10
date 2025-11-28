@@ -1,17 +1,10 @@
- :root{
-
-  --bg:#071025;
-
-  --card:#0f1724;
-
+:root{
+  --bg: var(--color-background);
+  --card: var(--color-surface);
   --muted:#9aa7c7;
-
-  --accent:#6ea8fe;
-
-  --msg-bg:#071424;
-
+  --accent: var(--color-accent);
+  --msg-bg: var(--color-surface);
   --danger:#ff6b6b; 
-
 }
 
 
@@ -20,7 +13,7 @@
 
 /* Removed overflow: hidden; as we are fixing height */
 
-html,body{height:100%;margin:0;background:linear-gradient(180deg,#041021 0%,#071025 100%);color:#e6eef9;} 
+html,body{height:100%;margin:0;background:linear-gradient(180deg, var(--color-background) 0%, var(--color-surface) 100%);color:#e6eef9;} 
 
 body { min-height: 100vh; } 
 
@@ -162,7 +155,15 @@ footer{display:flex;gap:8px;align-items:center;justify-content:space-between}
 
 /* Set max-height to 100% to fill the grid row space */
 
+main {
+  height: 100%;
+  min-height: calc(98.5vh - 80px - 12px);
+}
+
 .room-list-card{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 
   background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
 
