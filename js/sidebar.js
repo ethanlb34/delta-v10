@@ -12,10 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     // 2. UPDATED SIDEBAR HTML 
     const sidebarHtml = `
-<aside id="main-sidebar" class="sidebar-nav fixed left-0 top-0 h-full bg-dark-surface border-r border-cyan-800/50 flex flex-col py-6 z-50 overflow-hidden">
-    <div id="mouse-highlight-follower" class="absolute w-20 h-20 rounded-full bg-cyan-400/10 blur-xl pointer-events-none" style="opacity: 0; transition: opacity 0.2s ease-out;"></div>
+<aside id="main-sidebar" class="sidebar-nav fixed left-0 top-0 h-full bg-dark-surface border-r border-baby-blue/30 flex flex-col py-6 z-50 overflow-hidden">
+    <div id="mouse-highlight-follower" class="absolute w-20 h-20 rounded-full bg-baby-blue/10 blur-xl pointer-events-none" style="opacity: 0; transition: opacity 0.2s ease-out;"></div>
     <a href="/" onclick="route(event)" class="flex items-center w-full px-4 mb-10 h-16 relative z-10">
-        <img src="/static/favicons/deltav9.png" alt="Delta V9 Logo" class="w-11 h-11 rounded-lg shrink-0">
+        <img id="sidebar-logo" src="/static/favicons/deltav10.png" alt="Delta V10 Logo" class="w-11 h-11 rounded-lg shrink-0">
         <span class="nav-label text-2xl font-extrabold ml-4 sidebar-logo-text">Delta V10</span>
     </a>
     <nav class="flex flex-col flex-grow space-y-3 w-full px-3 relative z-10">
@@ -62,6 +62,10 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     
     document.body.insertAdjacentHTML('afterbegin', sidebarHtml);
+    
+    if (window.applyCurrentTheme) {
+        window.applyCurrentTheme();
+    }
     
     const currentPath = window.location.pathname;
     const proxyToggleBtn = document.getElementById('proxy-dropdown-toggle');
