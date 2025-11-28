@@ -3,13 +3,6 @@
 /* --------------------------------------------------- */
 
 :root {
-    /* CORE THEME COLORS (From Index.css - Primary Source) */
-    --color-accent: #5481cc;
-    --color-accent-shadow: rgba(84, 129, 204, 0.6);
-    --color-accent-soft: rgba(84, 129, 204, 0.3);
-    --color-background: #031120;
-    --color-surface: #0a1a33;
-    
     /* UTILITY & TRANSITIONS (Shared) */
     --transition: cubic-bezier(0.4, 0, 0.2, 1);
     --smooth-ease: cubic-bezier(0.4, 0, 0.2, 1);
@@ -19,7 +12,6 @@
     --text-color-unselected: #C9D4FF; 
     --active-color: #A2B8FF;
     --active-bg: #252B4A;
-    --active-glow-rgba: 162, 184, 255;
     --sidebar-width: 80px;
     --sidebar-width-expanded: 224px;
     --transition-duration: 350ms;
@@ -27,17 +19,17 @@
     --bg-gradient-1: #0A0A0A;
     --bg-gradient-2: #141E30;
     --bg-gradient-3: #243B55;
-    --highlight-color: rgba(100, 255, 218, 0.15);
+    --highlight-color: var(--color-accent-soft);
 
     /* LOGIN SPECIFIC (Prefixed to avoid conflicts) */
-    --login-bg-dark: #445675;
+    --login-bg-dark: var(--color-surface);
     --login-bg-card: rgba(0, 10, 25, 0.85);
 
     /* CHAT SPECIFIC (Prefixed to avoid conflicts) */
     --chat-bg: #071025;
     --chat-card: #0f1724;
     --chat-muted: #9aa7c7;
-    --chat-accent: #6ea8fe;
+    --chat-accent: var(--color-accent);
     --chat-msg-bg: #071424;
     --chat-danger: #ff6b6b;
 }
@@ -338,10 +330,10 @@ h2 {
 
     /* Enhanced glow effect on hover */
     box-shadow:
-        0 10px 30px rgba(84, 129, 204),
-        0 0 15px #64FFDA,
-        0 0 40px rgba(84, 129, 204),
-        0 0 80px rgba(84, 129, 204);
+        0 10px 30px var(--color-accent-shadow),
+        0 0 15px var(--color-accent),
+        0 0 40px var(--color-accent-shadow),
+        0 0 80px var(--color-accent-shadow);
 }
 
 /* MAIN CONTENT PUSH */
@@ -352,9 +344,9 @@ h2 {
     transition: margin-left var(--transition-duration) var(--smooth-ease);
     min-height: 100vh;
     height: 100%; /* IMPORTANT: Makes chat area fill available vertical space */
-    border-right: 1px solid rgba(100, 255, 218, 0.05);
-    border-bottom: 1px solid rgba(100, 255, 218, 0.05);
-    box-shadow: 0 0 10px rgba(100, 255, 218, 0.05);
+    border-right: 1px solid var(--color-accent-soft);
+    border-bottom: 1px solid var(--color-accent-soft);
+    box-shadow: 0 0 10px var(--color-accent-soft);
 }
 
 .sidebar-nav:hover ~ .main-content {
