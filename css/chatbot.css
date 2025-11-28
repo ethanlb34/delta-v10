@@ -3,23 +3,23 @@
     --transition-duration: 350ms; 
     --smooth-ease: cubic-bezier(0.4, 0, 0.2, 1); 
 
-    /* --- Dark Blue Theme Variables --- */
-    --page-bg: #0A192F; /* Deep, richer dark blue background */
-    --panel: #112240; /* Bot message background */
+    /* --- Theme Variables (using main theme colors) --- */
+    --page-bg: var(--color-background); /* Uses theme background */
+    --panel: var(--color-surface); /* Bot message background */
     --panel-2: #000000; /* Header/Input bar/Code Block background (Pure Black) */
 
-    /* Accent Colors (Baby Blue Neon) */
-    --baby-blue: #5481cc; /* Primary neon accent color */
-    --baby-blue-shadow: #445675; 
+    /* Accent Colors (uses theme accent) */
+    --baby-blue: var(--color-accent); /* Primary neon accent color */
+    --baby-blue-shadow: var(--color-accent-shadow); 
 
-    --accent: var(--baby-blue);
-    --send-icon-color: #031120; /* Dark text for contrast on accent background */
+    --accent: var(--color-accent);
+    --send-icon-color: var(--color-background); /* Dark text for contrast on accent background */
 
     /* Text Colors */
     --text: #FFFFFF; /* Pure white for main text */
     --muted: #94A3B8; /* Slate 400 for muted text/placeholders */
     --bot-text-color: var(--text); /* Bot text is white */
-    --user-text-color: var(--send-icon-color); /* User text is dark blue on light bubble */
+    --user-text-color: var(--send-icon-color); /* User text is dark on light bubble */
 
     --radius: 12px;
 }
@@ -94,15 +94,76 @@ body::before {
     border: 2px solid var(--page-bg); 
 }
 
-/* --- INTRO SCREEN (What can I do for you?) --- */
-.nexora .intro {
-    position: absolute;
-    inset: 0;
+/* --- AI HEADER WITH TOPIC SELECTOR --- */
+.nexora .ai-header {
+    flex-shrink: 0;
+    padding: 12px 16px;
+    background: var(--panel-2);
+    border-bottom: 1px solid rgba(100, 255, 218, 0.1);
+}
+
+.nexora .topic-selector {
     display: flex;
+    align-items: center;
+}
+
+.nexora .topic-dropdown {
+    background: var(--panel);
+    color: var(--text);
+    border: 1px solid rgba(100, 255, 218, 0.2);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 160px;
+}
+
+.nexora .topic-dropdown:hover {
+    border-color: var(--baby-blue);
+    box-shadow: 0 0 8px var(--baby-blue-shadow);
+}
+
+.nexora .topic-dropdown:focus {
+    outline: none;
+    border-color: var(--baby-blue);
+    box-shadow: 0 0 0 3px var(--baby-blue-shadow);
+}
+
+.nexora .topic-dropdown option {
+    background: var(--panel);
+    color: var(--text);
+    padding: 8px;
+}
+
+/* --- INTRO SCREEN (What can I do for you?) --- */
+.nexora .chat {
+    position: relative;
+}
+
+.nexora .intro {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     pointer-events: none;
     z-index: 1;
+    gap: 8px;
+    text-align: center;
+    width: min(90%, 600px);
+}
+
+.nexora .topic-hint {
+    font-size: 14px;
+    color: var(--muted);
+    font-weight: 500;
+    margin: 0;
+    opacity: 0.8;
 }
 
 .nexora .intro h1 {
