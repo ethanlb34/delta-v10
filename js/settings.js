@@ -61,7 +61,7 @@ window.applyCurrentDisguise();
  * Opens the current page in a new about:blank window (for cloaking).
  */
 window.openCloakedPageWrapper = () => {
-    const currentUrl = 'https://delta-v10-16908003.codehs.me/index.html';
+    const currentUrl = 'https://delta-v10-copy-1-16929075.codehs.me/index.html';
     const newWindow = window.open('about:blank', '_blank');
 
     if (newWindow) {
