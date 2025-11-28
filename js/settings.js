@@ -2,7 +2,7 @@
 
 // --- Global Disguise Data and Functions ---
 const disguises = {
-    "None": { title: "Delta V10", sub: "Default Title and Favicon", iconPath: "/static/favicons/deltav9.png" }, 
+    "None": { title: "Delta V10", sub: "Default Title and Favicon", iconPath: "/static/favicons/deltav10.png" }, 
     "Clever": { title: "Clever | Log in", sub: "Mimics the Clever login page.", iconPath: "/static/favicons/clever.ico" },
     "Canvas": { title: "Dashboard", sub: "Mimics a typical Canvas dashboard.", iconPath: "/static/favicons/canvas.png" },
     "Google Drive": { title: "My Drive - Google Drive", sub: "Mimics the Google Drive application.", iconPath: "/static/favicons/drive.png" },
@@ -52,7 +52,85 @@ window.applyCurrentDisguise = () => {
 };
 
 // 💥 SPA FIX 2: Run the application logic immediately on script load to apply saved disguise.
-window.applyCurrentDisguise(); 
+window.applyCurrentDisguise();
+
+
+// --- THEME SYSTEM ---
+const themes = {
+    'theme-default': { name: 'Default (Blue)', class: '', icon: '/static/favicons/deltav10.png' },
+    'theme-magma-40': { name: 'Magma 40 (Red)', class: 'theme-red', icon: '/static/favicons/deltav10red.png' },
+    'theme-oak-sapling': { name: 'Oak Sapling (Green)', class: 'theme-green', icon: '/static/favicons/deltav10green.png' },
+    'theme-grape-blast': { name: 'Grape Blast (Purple)', class: 'theme-grape-blast', icon: '/static/favicons/deltav10purple.png' },
+    'theme-tangerine-flow': { name: 'Tangerine Flow (Orange)', class: 'theme-tangerine-flow', icon: '/static/favicons/deltav10orange.png' },
+    'theme-candy-cane': { name: 'Candy Cane (Pink)', class: 'theme-candy-cane', icon: '/static/favicons/deltav10pink.png' },
+    'theme-sun-delight': { name: 'Sun Delight (Yellow)', class: 'theme-sun-delight', icon: '/static/favicons/deltav10yellow.png' },
+    'theme-christmas': { name: 'Christmas (Red & Green)', class: 'theme-christmas', icon: '/static/favicons/deltav10white.png' },
+    'theme-new-year': { name: 'New Year (Blue & Red)', class: 'theme-new-year', icon: '/static/favicons/deltav10red.png' },
+    'theme-halloween': { name: 'Halloween (Orange & Purple)', class: 'theme-halloween', icon: '/static/favicons/deltav10orange.png' }
+};
+
+const applyTheme = (themeId) => {
+    const theme = themes[themeId] || themes['theme-default'];
+    
+    Object.values(themes).forEach(t => {
+        if (t.class) {
+            document.documentElement.classList.remove(t.class);
+        }
+    });
+    
+    if (theme.class) {
+        document.documentElement.classList.add(theme.class);
+    }
+    
+    const themeTitle = document.getElementById('theme-title');
+    if (themeTitle) {
+        themeTitle.textContent = theme.name;
+    }
+    
+    const sidebarLogo = document.getElementById('sidebar-logo');
+    if (sidebarLogo) {
+        sidebarLogo.src = theme.icon;
+    }
+};
+
+// Handle theme dropdown change event
+window.handleThemeChange = (themeId) => {
+    applyTheme(themeId);
+    localStorage.setItem('deltaV10_theme', themeId);
+};
+
+window.applyCurrentTheme = () => {
+    const savedTheme = localStorage.getItem('deltaV10_theme') || 'theme-default';
+    applyTheme(savedTheme);
+};
+
+window.applyCurrentTheme(); 
+
+
+// --- SIDEBAR POSITION SYSTEM ---
+window.handleSidebarPositionChange = (position) => {
+    if (position === 'right') {
+        document.documentElement.classList.add('sidebar-right');
+    } else {
+        document.documentElement.classList.remove('sidebar-right');
+    }
+    localStorage.setItem('deltaV10_sidebarPosition', position);
+};
+
+window.applyCurrentSidebarPosition = () => {
+    const position = localStorage.getItem('deltaV10_sidebarPosition') || 'left';
+    const select = document.getElementById('sidebarPositionSelect');
+    if (select) {
+        select.value = position;
+    }
+    if (position === 'right') {
+        document.documentElement.classList.add('sidebar-right');
+    } else {
+        document.documentElement.classList.remove('sidebar-right');
+    }
+};
+
+window.applyCurrentSidebarPosition();
 
 
 // --- Utility Placeholder Functions ---
@@ -242,5 +320,20 @@ window.initSettingsPage = () => {
         
         // Ensure preview elements are updated correctly on settings load.
         window.applyCurrentDisguise();
+    }
+
+    // --- Theme UI Logic (Settings Page Only) ---
+    const themeSelect = document.getElementById('themeSelect');
+    
+    if (themeSelect) {
+        themeSelect.value = localStorage.getItem('deltaV10_theme') || 'theme-default';
+
+        themeSelect.addEventListener('change', (e) => {
+            const selectedTheme = e.target.value;
+            applyTheme(selectedTheme);
+            localStorage.setItem('deltaV10_theme', selectedTheme);
+        });
+        
+        window.applyCurrentTheme();
     }
 };
