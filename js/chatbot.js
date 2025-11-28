@@ -5,13 +5,62 @@ import { GoogleGenAI } from 'https://cdn.jsdelivr.net/npm/@google/genai@1.21.0/d
 
 // WARNING: In a real app, NEVER expose a real API key client-side.
 // You must replace this with your actual key for the AI to work.
-const GEMINI_API_KEY = "REMOVED"; 
+const GEMINI_API_KEY = "AIzaSyCq16dgsEll7mEFhSVBYkhRyDKytqJ7XME"; 
 
 // Global variables for AI client and history
 let ai;
 let generateContent;
-const history = []; 
+let history = []; 
 let listenersAttached = false;
+let currentTopic = 'general';
+
+// Topic configurations with system prompts
+const topicConfigs = {
+    'general': {
+        name: 'General',
+        systemPrompt: 'You are Delta AI, a helpful and friendly assistant. Answer questions on any topic clearly and concisely.'
+    },
+    'math': {
+        name: 'Math',
+        systemPrompt: 'You are Delta AI, a math tutor. Help users solve math problems step by step. Explain concepts clearly, show your work, and use proper mathematical notation when helpful.'
+    },
+    'reading': {
+        name: 'Reading',
+        systemPrompt: 'You are Delta AI, a reading comprehension assistant. Help users understand texts, analyze literature, identify themes, and improve their reading skills.'
+    },
+    'writing': {
+        name: 'Writing',
+        systemPrompt: 'You are Delta AI, a writing assistant. Help users improve their writing, provide feedback on grammar and style, suggest improvements, and help with essay structure and creative writing.'
+    },
+    'history': {
+        name: 'History',
+        systemPrompt: 'You are Delta AI, a history expert. Help users learn about historical events, figures, and time periods. Provide accurate historical context and explain cause-and-effect relationships.'
+    },
+    'science': {
+        name: 'Science',
+        systemPrompt: 'You are Delta AI, a science tutor. Explain scientific concepts clearly, help with biology, chemistry, physics, and other sciences. Use examples and analogies to make complex topics understandable.'
+    },
+    'coding': {
+        name: 'Coding',
+        systemPrompt: 'You are Delta AI, a programming assistant. Help users write code, debug issues, explain programming concepts, and provide code examples. Support multiple programming languages and best practices.'
+    },
+    'cooking': {
+        name: 'Cooking',
+        systemPrompt: 'You are Delta AI, a culinary assistant. Share recipes, cooking tips, ingredient substitutions, and help users learn cooking techniques. Be helpful with meal planning and dietary considerations.'
+    },
+    'language': {
+        name: 'Language Learning',
+        systemPrompt: 'You are Delta AI, a language learning assistant. Help users learn new languages, explain grammar rules, provide vocabulary, and offer practice exercises. Be encouraging and patient.'
+    },
+    'music': {
+        name: 'Music',
+        systemPrompt: 'You are Delta AI, a music assistant. Help users learn about music theory, instruments, genres, and famous musicians. Provide guidance on learning to play instruments and music composition.'
+    },
+    'art': {
+        name: 'Art & Design',
+        systemPrompt: 'You are Delta AI, an art and design assistant. Help users learn about art techniques, design principles, famous artists, and creative projects. Provide guidance on drawing, painting, and digital art.'
+    }
+};
 
 // --- Helper Functions to Get Elements (must be run AFTER the AI page HTML is loaded) ---
 function getElements() {
@@ -110,7 +159,35 @@ function displayMessage(text, sender) {
 }
 
 
-// --- Main Send Logic (Remains the same) ---
+// --- Topic Change Handler ---
+window.handleTopicChange = function(topicId) {
+    currentTopic = topicId;
+    const config = topicConfigs[topicId] || topicConfigs['general'];
+    
+    // Update the topic hint text
+    const topicHint = document.getElementById('topic-hint');
+    if (topicHint) {
+        topicHint.textContent = `Topic: ${config.name}`;
+    }
+    
+    // Clear chat history when topic changes to start fresh with new context
+    history = [];
+    
+    // Clear the chat scroll area
+    const { chatScroll, introDiv } = getElements();
+    if (chatScroll) {
+        chatScroll.innerHTML = '';
+    }
+    
+    // Show the intro again
+    if (introDiv) {
+        introDiv.style.display = 'block';
+    }
+    
+    console.log(`Topic changed to: ${config.name}`);
+};
+
+// --- Main Send Logic ---
 async function sendMessage() {
     const { promptInput, sendButton, chatScroll } = getElements();
     const message = promptInput.value.trim();
@@ -131,17 +208,31 @@ async function sendMessage() {
     chatScroll.appendChild(thinkingMessage);
     chatScroll.scrollTop = chatScroll.scrollHeight;
 
-    // 3. Update history
+    // 3. Get the current topic's system prompt
+    const topicConfig = topicConfigs[currentTopic] || topicConfigs['general'];
+    
+    // 4. Build contents with system instruction
+    const systemInstruction = {
+        role: "user",
+        parts: [{ text: `[System Instruction: ${topicConfig.systemPrompt}]` }]
+    };
+    
+    // Add user message to history
     history.push({
         role: "user", 
         parts: [{ text: message }]
     });
     
+    // Build the full contents array with system prompt at the start
+    const contents = history.length === 1 
+        ? [systemInstruction, ...history]  // First message: include system prompt
+        : history;  // Subsequent messages: system prompt already in context
+    
     try {
-        // 4. Call the Gemini API with the ENTIRE history
+        // 5. Call the Gemini API with the contents
         const result = await generateContent({
             model: "gemini-2.5-flash",
-            contents: history 
+            contents: contents 
         }); 
         
         // 5. Cleanup placeholder and display response
