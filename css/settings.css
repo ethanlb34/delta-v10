@@ -17,7 +17,7 @@
     --bg-gradient-2: #141E30;
     --bg-gradient-3: #243B55;
 
-    --highlight-color: rgba(100, 255, 218, 0.15); /* Light teal-cyan overlay */
+    --highlight-color: var(--color-accent-soft); /* Uses theme accent */
 }
 
 @keyframes moving-gradient {
@@ -69,10 +69,10 @@
 
     /* Enhanced glow effect on hover */
     box-shadow:
-        0 10px 30px rgba(84, 129, 204), /* Base shadow for lift */
-        0 0 15px #64FFDA,
-        0 0 40px rgba(84, 129, 204),
-        0 0 80px rgba(84, 129, 204);
+        0 10px 30px var(--color-accent-shadow),
+        0 0 15px var(--color-accent),
+        0 0 40px var(--color-accent-shadow),
+        0 0 80px var(--color-accent-shadow);
 }
 
 /* --------------------------------------------------- */
@@ -85,9 +85,9 @@
     will-change: margin-left;
     transition: margin-left var(--transition-duration) var(--smooth-ease);
     min-height: 100vh;
-    border-right: 1px solid rgba(100, 255, 218, 0.05);
-    border-bottom: 1px solid rgba(100, 255, 218, 0.05);
-    box-shadow: 0 0 10px rgba(100, 255, 218, 0.05);
+    border-right: 1px solid var(--color-accent-soft);
+    border-bottom: 1px solid var(--color-accent-soft);
+    box-shadow: 0 0 10px var(--color-accent-soft);
 }
 
 .sidebar-nav:hover ~ .main-content {
@@ -193,15 +193,15 @@
 /* --------------------------------------------------- */
 
 .sidebar-logo-text {
-    color: theme('colors.baby-blue');
-    text-shadow: 0 0 3px rgba(100, 255, 218, 0.8);
+    color: var(--color-accent);
+    text-shadow: 0 0 3px var(--color-accent-shadow);
     transition: text-shadow var(--transition-duration) var(--smooth-ease);
 }
 
 .sidebar-nav:hover .sidebar-logo-text {
     text-shadow:
-        0 0 10px theme('colors.baby-blue'),
-        0 0 20px rgba(100, 255, 218, 0.8),
-        0 0 30px rgba(100, 255, 218, 0.6),
-        0 0 45px rgba(100, 255, 218, 0.3);
+        0 0 10px var(--color-accent),
+        0 0 20px var(--color-accent-shadow),
+        0 0 30px var(--color-accent-shadow),
+        0 0 45px var(--color-accent-soft);
 }
