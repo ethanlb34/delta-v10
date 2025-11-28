@@ -1,8 +1,8 @@
 :root {
-    --accent: #5481cc;
-    --accent-glow: rgba(100, 255, 218, 0.6);
-    --accent-soft: rgba(100, 255, 218, 0.1);
-    --bg-dark: #445675;
+    --accent: var(--color-accent);
+    --accent-glow: var(--color-accent-shadow);
+    --accent-soft: var(--color-accent-soft);
+    --bg-dark: var(--color-surface);
     --bg-card: rgba(0, 10, 25, 0.85);
     --transition: cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -11,8 +11,8 @@ body {
     margin: 0;
     min-height: 100vh;
     font-family: 'Electrolize', sans-serif;
-    color: var(--accent);
-    background: radial-gradient(circle at top, #06203a, var(--bg-dark) 60%);
+    color: var(--color-accent);
+    background: radial-gradient(circle at top, var(--color-background), var(--color-surface) 60%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -24,8 +24,8 @@ body::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at 70% 20%, rgba(100,255,218,0.15), transparent 60%),
-                radial-gradient(circle at 30% 80%, rgba(0,180,255,0.15), transparent 60%);
+    background: radial-gradient(circle at 70% 20%, var(--color-accent-soft), transparent 60%),
+                radial-gradient(circle at 30% 80%, var(--color-accent-soft), transparent 60%);
     filter: blur(80px);
     z-index: 0;
 }
